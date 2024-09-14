@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plantopia/login_pages/login_page.dart';
 
-class WelcomePage extends StatefulWidget {
-  const WelcomePage({super.key});
+class ForgetPswPage extends StatefulWidget {
+  const ForgetPswPage({super.key});
 
   @override
-  State<WelcomePage> createState() => _WelcomePageState();
+  State<ForgetPswPage> createState() => _ForgetPswPageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> {
+class _ForgetPswPageState extends State<ForgetPswPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +22,7 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
           Text(
             textAlign: TextAlign.center,
-            "Welcome \nTo \nPlantopia!",
+            "Plantopia!",
             style: GoogleFonts.playfairDisplay(
               fontSize: 48,
               color: Colors.white,
@@ -30,10 +30,10 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: 50),
             child: Text(
               textAlign: TextAlign.center,
-              "Where Every Plant \nFind A Home",
+              "Forget Password",
               style: GoogleFonts.playfairDisplay(
                 fontSize: 36,
                 color: Colors.white,
@@ -41,9 +41,38 @@ class _WelcomePageState extends State<WelcomePage> {
               ),
             ),
           ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            child: TextField(
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 2,
+                    style: BorderStyle.solid,
+                    color: Colors.white,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                ),
+                hintText: "Enter Your Email",
+                hintStyle: GoogleFonts.playfairDisplay(
+                  fontSize: 24,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              keyboardType: TextInputType.emailAddress,
+              style: GoogleFonts.playfairDisplay(
+                fontSize: 24,
+                color: Colors.white,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
           GestureDetector(
             onTap: () {
-              Navigator.pushReplacement(
+              Navigator.pop(
                 context,
                 PageRouteBuilder(
                   pageBuilder: (_, __, ___) => const LoginPage(),
@@ -72,16 +101,16 @@ class _WelcomePageState extends State<WelcomePage> {
                       color: const Color.fromRGBO(255, 255, 255, 150),
                     ),
                     margin: const EdgeInsets.only(top: 30),
-                    width: 220,
+                    width: 260,
                     height: 60,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Get Start",
+                          "Forget Password",
                           style: GoogleFonts.playfairDisplay(
-                            fontSize: 36,
+                            fontSize: 24,
                             color: Colors.white,
                             fontWeight: FontWeight.normal,
                           ),
@@ -90,7 +119,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     ),
                   ),
                   const Positioned(
-                    left: -30,
+                    right: -30,
                     top: 10,
                     child: Image(
                       width: 100,
@@ -101,7 +130,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
