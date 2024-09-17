@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:plantopia/categories_pages/all_types_page.dart';
+import 'package:plantopia/categories_pages/indoor_plants_page.dart';
+import 'package:plantopia/categories_pages/outdoor_plants_page.dart';
+import 'package:plantopia/categories_pages/top_picks_pages.dart';
 import 'package:plantopia/colors.dart';
 import 'package:plantopia/main.dart';
 
@@ -92,7 +96,19 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           //Top Picks
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) =>
+                                      const TopPicksPages(),
+                                  transitionDuration:
+                                      const Duration(seconds: 2),
+                                  transitionsBuilder: (_, a, __, c) =>
+                                      FadeTransition(opacity: a, child: c),
+                                ),
+                              );
+                            },
                             child: Container(
                               width: MediaQuery.of(context).size.width / 2.35,
                               height: 210,
@@ -143,7 +159,19 @@ class _HomePageState extends State<HomePage> {
                           ),
                           //Outdoor Plants
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) =>
+                                      const OutdoorPlantsPage(),
+                                  transitionDuration:
+                                      const Duration(seconds: 2),
+                                  transitionsBuilder: (_, a, __, c) =>
+                                      FadeTransition(opacity: a, child: c),
+                                ),
+                              );
+                            },
                             child: Container(
                               width: MediaQuery.of(context).size.width / 2.35,
                               height: 210,
@@ -194,7 +222,18 @@ class _HomePageState extends State<HomePage> {
                     ),
                     //Indoor Plants
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (_, __, ___) =>
+                                const IndoorPlantsPage(),
+                            transitionDuration: const Duration(seconds: 2),
+                            transitionsBuilder: (_, a, __, c) =>
+                                FadeTransition(opacity: a, child: c),
+                          ),
+                        );
+                      },
                       child: Container(
                         margin: const EdgeInsets.only(top: 20),
                         child: Row(
@@ -246,7 +285,19 @@ class _HomePageState extends State<HomePage> {
                             ),
                             //All Types
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___) =>
+                                        const AllTypesPage(),
+                                    transitionDuration:
+                                        const Duration(seconds: 2),
+                                    transitionsBuilder: (_, a, __, c) =>
+                                        FadeTransition(opacity: a, child: c),
+                                  ),
+                                );
+                              },
                               child: Container(
                                 width: MediaQuery.of(context).size.width / 2.35,
                                 height: 210,
