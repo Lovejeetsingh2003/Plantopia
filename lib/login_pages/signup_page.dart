@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:plantopia/colors.dart';
 import 'package:plantopia/login_pages/login_page.dart';
+import 'package:plantopia/main.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -14,7 +15,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color.fromRGBO(58, 110, 67, 1),
+      backgroundColor: kPrimaryColor,
       body: Column(
         children: [
           const Image(
@@ -23,11 +24,7 @@ class _SignupPageState extends State<SignupPage> {
           Text(
             textAlign: TextAlign.center,
             "Plantopia!",
-            style: GoogleFonts.playfairDisplay(
-              fontSize: 48,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+            style: kLightAppThemeData.textTheme.titleLarge,
           ),
           Container(
             margin: const EdgeInsets.all(20),
@@ -37,25 +34,17 @@ class _SignupPageState extends State<SignupPage> {
                   borderSide: BorderSide(
                     width: 2,
                     style: BorderStyle.solid,
-                    color: Colors.white,
+                    color: kOutlineColor,
                   ),
                   borderRadius: BorderRadius.all(
                     Radius.circular(20),
                   ),
                 ),
                 hintText: "Enter Your Email",
-                hintStyle: GoogleFonts.playfairDisplay(
-                  fontSize: 24,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.normal,
-                ),
+                hintStyle: kLightAppThemeData.textTheme.bodyMedium,
               ),
               keyboardType: TextInputType.emailAddress,
-              style: GoogleFonts.playfairDisplay(
-                fontSize: 24,
-                color: Colors.white,
-                fontWeight: FontWeight.normal,
-              ),
+              style: kLightAppThemeData.textTheme.bodyMedium,
             ),
           ),
           Container(
@@ -66,25 +55,17 @@ class _SignupPageState extends State<SignupPage> {
                   borderSide: BorderSide(
                     width: 2,
                     style: BorderStyle.solid,
-                    color: Colors.white,
+                    color: kOutlineColor,
                   ),
                   borderRadius: BorderRadius.all(
                     Radius.circular(20),
                   ),
                 ),
                 hintText: "Enter Your Password",
-                hintStyle: GoogleFonts.playfairDisplay(
-                  fontSize: 24,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.normal,
-                ),
+                hintStyle: kLightAppThemeData.textTheme.bodyMedium,
               ),
               keyboardType: TextInputType.emailAddress,
-              style: GoogleFonts.playfairDisplay(
-                fontSize: 24,
-                color: Colors.white,
-                fontWeight: FontWeight.normal,
-              ),
+              style: kLightAppThemeData.textTheme.bodyMedium,
             ),
           ),
           Container(
@@ -95,25 +76,17 @@ class _SignupPageState extends State<SignupPage> {
                   borderSide: BorderSide(
                     width: 2,
                     style: BorderStyle.solid,
-                    color: Colors.white,
+                    color: kOutlineColor,
                   ),
                   borderRadius: BorderRadius.all(
                     Radius.circular(20),
                   ),
                 ),
                 hintText: "Confirm Password",
-                hintStyle: GoogleFonts.playfairDisplay(
-                  fontSize: 24,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.normal,
-                ),
+                hintStyle: kLightAppThemeData.textTheme.bodyMedium,
               ),
               keyboardType: TextInputType.emailAddress,
-              style: GoogleFonts.playfairDisplay(
-                fontSize: 24,
-                color: Colors.white,
-                fontWeight: FontWeight.normal,
-              ),
+              style: kLightAppThemeData.textTheme.bodyMedium,
             ),
           ),
           GestureDetector(
@@ -142,9 +115,9 @@ class _SignupPageState extends State<SignupPage> {
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         width: 2,
-                        color: const Color.fromRGBO(255, 255, 255, 180),
+                        color: kOutlineColor,
                       ),
-                      color: const Color.fromRGBO(255, 255, 255, 150),
+                      color: kButtonColor,
                     ),
                     margin: const EdgeInsets.only(top: 10),
                     width: 200,
@@ -155,11 +128,7 @@ class _SignupPageState extends State<SignupPage> {
                       children: [
                         Text(
                           "SignUp",
-                          style: GoogleFonts.playfairDisplay(
-                            fontSize: 36,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal,
-                          ),
+                          style: kLightAppThemeData.textTheme.bodyLarge,
                         ),
                       ],
                     ),
@@ -184,11 +153,7 @@ class _SignupPageState extends State<SignupPage> {
               children: [
                 Text(
                   "Already Have An Account?",
-                  style: GoogleFonts.playfairDisplay(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.normal,
-                  ),
+                  style: kLightAppThemeData.textTheme.bodySmall,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -208,11 +173,7 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     child: Text(
                       "Login",
-                      style: GoogleFonts.playfairDisplay(
-                        fontSize: 18,
-                        color: const Color.fromRGBO(227, 220, 165, 1),
-                        fontWeight: FontWeight.normal,
-                      ),
+                      style: kDarkAppThemeData.textTheme.bodySmall,
                     ),
                   ),
                 ),

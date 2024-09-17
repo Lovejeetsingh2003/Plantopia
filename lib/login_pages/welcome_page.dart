@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:plantopia/colors.dart';
 import 'package:plantopia/login_pages/login_page.dart';
+import 'package:plantopia/main.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -14,7 +15,7 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color.fromRGBO(58, 110, 67, 1),
+      backgroundColor: kPrimaryColor,
       body: Column(
         children: [
           const Image(
@@ -23,22 +24,14 @@ class _WelcomePageState extends State<WelcomePage> {
           Text(
             textAlign: TextAlign.center,
             "Welcome \nTo \nPlantopia!",
-            style: GoogleFonts.playfairDisplay(
-              fontSize: 48,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+            style: kLightAppThemeData.textTheme.titleLarge,
           ),
           Container(
             margin: const EdgeInsets.only(top: 10),
             child: Text(
               textAlign: TextAlign.center,
               "Where Every Plant \nFind A Home",
-              style: GoogleFonts.playfairDisplay(
-                fontSize: 36,
-                color: Colors.white,
-                fontWeight: FontWeight.normal,
-              ),
+              style: kLightAppThemeData.textTheme.bodyLarge,
             ),
           ),
           GestureDetector(
@@ -67,9 +60,9 @@ class _WelcomePageState extends State<WelcomePage> {
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         width: 2,
-                        color: const Color.fromRGBO(255, 255, 255, 180),
+                        color: kOutlineColor,
                       ),
-                      color: const Color.fromRGBO(255, 255, 255, 150),
+                      color: kButtonColor,
                     ),
                     margin: const EdgeInsets.only(top: 30),
                     width: 220,
@@ -80,11 +73,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       children: [
                         Text(
                           "Get Start",
-                          style: GoogleFonts.playfairDisplay(
-                            fontSize: 36,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal,
-                          ),
+                          style: kLightAppThemeData.textTheme.bodyLarge,
                         ),
                       ],
                     ),
