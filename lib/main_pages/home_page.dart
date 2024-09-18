@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         actions: [
           Container(
@@ -120,6 +121,8 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -128,11 +131,11 @@ class _HomePageState extends State<HomePage> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width /
-                                              3,
+                                              3.3,
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .width /
-                                              3,
+                                              3.3,
                                           image: const AssetImage(
                                               "assets/images/plant1.png"))
                                     ],
@@ -183,6 +186,8 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -250,6 +255,8 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -309,6 +316,8 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
@@ -317,11 +326,11 @@ class _HomePageState extends State<HomePage> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width /
-                                                3,
+                                                3.3,
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .width /
-                                                3,
+                                                3.3,
                                             image: const AssetImage(
                                                 "assets/images/plant5.png"))
                                       ],
