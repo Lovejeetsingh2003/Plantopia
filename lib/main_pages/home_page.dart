@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plantopia/cart/cart_page.dart';
 import 'package:plantopia/categories_pages/all_types_page.dart';
 import 'package:plantopia/categories_pages/indoor_plants_page.dart';
 import 'package:plantopia/categories_pages/outdoor_plants_page.dart';
@@ -33,7 +34,17 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => const CartPage(),
+                        transitionDuration: const Duration(seconds: 2),
+                        transitionsBuilder: (_, a, __, c) =>
+                            FadeTransition(opacity: a, child: c),
+                      ),
+                    );
+                  },
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 10),
                     height: 45,
