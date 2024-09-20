@@ -118,11 +118,11 @@ class _OutdoorPlantsPageState extends State<OutdoorPlantsPage> {
           ),
           SliverAppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: const Color.fromRGBO(255, 255, 255, 256),
             elevation: 0,
             pinned: true,
             bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(20), child: SizedBox()),
+                preferredSize: Size.fromHeight(-44), child: SizedBox()),
             flexibleSpace: FlexibleSpaceBar(
               stretchModes: const [StretchMode.zoomBackground],
               background: Stack(
@@ -137,93 +137,6 @@ class _OutdoorPlantsPageState extends State<OutdoorPlantsPage> {
                           bottomRight: Radius.circular(40),
                         ),
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 20,
-                    top: 0,
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                            color: Colors.black,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            "16",
-                            style: kLightAppThemeData.textTheme.bodySmall,
-                          ),
-                        ),
-                        const Text(
-                          "All",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    left: 110,
-                    top: 0,
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                            color: kGreyColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            "6",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          ),
-                        ),
-                        const Text(
-                          "Outdoor",
-                          style: TextStyle(
-                            color: kPrimaryColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    left: 250,
-                    top: 0,
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                            color: kGreyColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            "10",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          ),
-                        ),
-                        const Text(
-                          "Indoor",
-                          style: TextStyle(
-                            color: kPrimaryColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                 ],
