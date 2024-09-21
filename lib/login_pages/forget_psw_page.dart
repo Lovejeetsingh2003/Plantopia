@@ -61,7 +61,7 @@ class _ForgetPswPageState extends State<ForgetPswPage> {
                 context,
                 PageRouteBuilder(
                   pageBuilder: (_, __, ___) => const LoginPage(),
-                  transitionDuration: const Duration(seconds: 1),
+                  transitionDuration: const Duration(seconds: 2),
                   transitionsBuilder: (_, a, __, c) =>
                       FadeTransition(opacity: a, child: c),
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plantopia/categories_pages/bottom_sheet_page.dart';
 import 'package:plantopia/colors.dart';
 import 'package:plantopia/main.dart';
 import 'package:plantopia/main_pages/home_page.dart';
@@ -181,7 +182,14 @@ class _IndoorPlantsPageState extends State<IndoorPlantsPage> {
                               ],
                             ),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                showBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return const BottomSheetPage();
+                                  },
+                                );
+                              },
                               child: Container(
                                 alignment: Alignment.center,
                                 height: 60,
