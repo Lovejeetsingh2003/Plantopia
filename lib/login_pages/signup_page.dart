@@ -33,7 +33,7 @@ class _SignupPageState extends State<SignupPage> {
         var response = await http.post(
           Uri.parse(signUpApi),
           body: jsonEncode(regBody),
-          headers: {"Content-Type": "application/json"},
+          headers: {"Content-Type": "application/json; charset=UTF-8"},
         );
 
         if (response.statusCode == 200) {
@@ -41,8 +41,9 @@ class _SignupPageState extends State<SignupPage> {
           print("Message: $message");
           Fluttertoast.showToast(msg: "Sign Up Successful");
           Navigator.pop(context);
+          print("data : $regBody");
         } else {
-          Fluttertoast.showToast(msg: "Error: ${response.reasonPhrase}");
+          print("Error : ${response.body}");
         }
       } catch (e) {
         print("error: $e");
