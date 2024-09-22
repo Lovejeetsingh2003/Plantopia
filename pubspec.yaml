@@ -38,6 +38,8 @@ dependencies:
   page_transition: ^2.0.9
   lottie: ^3.1.2
   swipeable_button_view: ^0.0.2
+  fluttertoast: ^8.2.8
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:

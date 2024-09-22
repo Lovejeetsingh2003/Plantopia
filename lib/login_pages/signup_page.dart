@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:plantopia/colors.dart';
+import 'package:plantopia/config.dart';
 import 'package:plantopia/login_pages/login_page.dart';
 import 'package:plantopia/main.dart';
+import 'package:http/http.dart' as http;
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -11,6 +15,43 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  TextEditingController emailTextController = TextEditingController();
+  TextEditingController passwordTextController = TextEditingController();
+  TextEditingController confirmPswTextController = TextEditingController();
+
+  void signUpClick() async {
+    if (emailTextController.text.isNotEmpty &&
+        passwordTextController.text.isNotEmpty &&
+        confirmPswTextController.text.isNotEmpty &&
+        passwordTextController.text == confirmPswTextController.text) {
+      var regBody = {
+        "email": emailTextController.text,
+        "password": passwordTextController.text
+      };
+
+      try {
+        var response = await http.post(
+          Uri.parse(signUpApi),
+          body: jsonEncode(regBody),
+          headers: {"Content-Type": "application/json"},
+        );
+
+        if (response.statusCode == 200) {
+          var message = jsonDecode(response.body);
+          print("Message: $message");
+          Fluttertoast.showToast(msg: "Sign Up Successful");
+          Navigator.pop(context);
+        } else {
+          Fluttertoast.showToast(msg: "Error: ${response.reasonPhrase}");
+        }
+      } catch (e) {
+        print("error: $e");
+      }
+    } else {
+      Fluttertoast.showToast(msg: "some error occured");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +70,7 @@ class _SignupPageState extends State<SignupPage> {
           Container(
             margin: const EdgeInsets.all(20),
             child: TextField(
+              controller: emailTextController,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(
                   borderSide: BorderSide(
@@ -50,6 +92,8 @@ class _SignupPageState extends State<SignupPage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
+              obscureText: true,
+              controller: passwordTextController,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(
                   borderSide: BorderSide(
@@ -64,13 +108,14 @@ class _SignupPageState extends State<SignupPage> {
                 hintText: "Enter Your Password",
                 hintStyle: kLightAppThemeData.textTheme.bodyMedium,
               ),
-              keyboardType: TextInputType.emailAddress,
               style: kLightAppThemeData.textTheme.bodyMedium,
             ),
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: TextField(
+              obscureText: true,
+              controller: confirmPswTextController,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(
                   borderSide: BorderSide(
@@ -85,21 +130,12 @@ class _SignupPageState extends State<SignupPage> {
                 hintText: "Confirm Password",
                 hintStyle: kLightAppThemeData.textTheme.bodyMedium,
               ),
-              keyboardType: TextInputType.emailAddress,
               style: kLightAppThemeData.textTheme.bodyMedium,
             ),
           ),
           GestureDetector(
             onTap: () {
-              Navigator.pop(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => const LoginPage(),
-                  transitionDuration: const Duration(seconds: 1),
-                  transitionsBuilder: (_, a, __, c) =>
-                      FadeTransition(opacity: a, child: c),
-                ),
-              );
+              signUpClick();
             },
             child: Padding(
               padding: const EdgeInsets.all(10),
@@ -157,7 +193,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pop(
                       context,
                       PageRouteBuilder(
                         pageBuilder: (_, __, ___) => const LoginPage(),
