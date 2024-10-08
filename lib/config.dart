@@ -1,7 +1,11 @@
-const url = 'http://192.168.1.19:7000/';
+const url = 'http://192.168.1.17:7000/';
 
 const signUpApi = '${url}registeration';
 
 const loginApi = '${url}login';
 
 const forgotApi = '${url}forgot';
+
+const getProductApi = '${url}getproduct';
+
+const getTopPickApi = '${url}gettoppick';
