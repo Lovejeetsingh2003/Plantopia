@@ -8,3 +8,4 @@ const kOutlineColor = Color.fromRGBO(255, 255, 255, 150);
 const kButtonColor = Color.fromRGBO(255, 255, 255, 150);
 const kInvisibleGreenContainerColor = Color.fromRGBO(58, 110, 67, 150);
 const kGreyColor = Color.fromRGBO(147, 147, 147, 1);
+const kWhiteColor = Color.fromRGBO(255, 255, 255, 155);

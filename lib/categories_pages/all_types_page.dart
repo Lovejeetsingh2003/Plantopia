@@ -171,7 +171,7 @@ class _AllTypesPageState extends State<AllTypesPage> {
           ),
           SliverAppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: kWhiteColor,
             elevation: 0,
             pinned: true,
             bottom: const PreferredSize(
@@ -320,7 +320,10 @@ class _AllTypesPageState extends State<AllTypesPage> {
                               ),
                             ),
                             child: Container(
-                              padding: const EdgeInsets.only(left: 20),
+                              padding: lastName != ""
+                                  ? const EdgeInsets.only(left: 20)
+                                  : const EdgeInsets.only(
+                                      top: 20, left: 20, bottom: 20),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -334,11 +337,13 @@ class _AllTypesPageState extends State<AllTypesPage> {
                                         style: kDarkAppThemeData
                                             .textTheme.titleSmall,
                                       ),
-                                      Text(
-                                        lastName ?? 'Unknown',
-                                        style: kDarkAppThemeData
-                                            .textTheme.titleSmall,
-                                      ),
+                                      lastName != ""
+                                          ? Text(
+                                              lastName ?? 'Unknown',
+                                              style: kDarkAppThemeData
+                                                  .textTheme.titleSmall,
+                                            )
+                                          : const SizedBox(),
                                       Text(
                                         '₹$price',
                                         style: kLightAppThemeData
@@ -384,13 +389,13 @@ class _AllTypesPageState extends State<AllTypesPage> {
                                     image,
                                     height: 120,
                                     width: 120,
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fitHeight,
                                   )
                                 : Image.memory(
                                     base64Decode(image),
                                     height: 120,
                                     width: 120,
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fitHeight,
                                   ),
                           ),
                         ],
