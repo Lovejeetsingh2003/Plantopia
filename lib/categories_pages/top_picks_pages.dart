@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:plantopia/categories_pages/bottom_sheet_page.dart';
 import 'package:plantopia/colors.dart';
+import 'package:plantopia/config.dart';
 import 'package:plantopia/main.dart';
 import 'package:plantopia/main_pages/home_page.dart';
+import 'package:plantopia/objects/product_object.dart';
+import 'package:plantopia/objects/top_pick_object.dart';
+import 'package:http/http.dart' as http;
 
 class TopPicksPages extends StatefulWidget {
   const TopPicksPages({super.key});
@@ -12,6 +18,105 @@ class TopPicksPages extends StatefulWidget {
 }
 
 class _TopPicksPagesState extends State<TopPicksPages> {
+  static getTopPicks() async {
+    List<TopPickObject> top_picks = [];
+    try {
+      final res = await http.get(
+        Uri.parse(getTopPickApi),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+      );
+
+      if (res.statusCode == 200) {
+        var data = jsonDecode(res.body);
+
+        if (data['data'] != null && data['data'] is List) {
+          data['data'].forEach((value) {
+            top_picks.add(
+              TopPickObject(
+                id: value['_id'],
+                productId: value['product_id'],
+              ),
+            );
+          });
+
+          return top_picks;
+        } else {
+          print("No products found");
+          return [];
+        }
+      } else {
+        print(
+            "Failed top pick to load products. Status code: ${res.statusCode}");
+        return [];
+      }
+    } catch (e) {
+      print("error : $e");
+      return [];
+    }
+  }
+
+  static Future<List<ProductObject>> getProduct(
+      List<TopPickObject> top_picks) async {
+    List<ProductObject> products = [];
+    try {
+      for (var topPick in top_picks) {
+        var body = {"id": topPick.productId};
+        var res = await http.post(
+          Uri.parse(getProductByIdApi),
+          body: jsonEncode(body),
+          headers: {"Content-Type": "application/json; charset=UTF-8"},
+        );
+
+        if (res.statusCode == 200) {
+          var data = jsonDecode(res.body);
+
+          if (data['data'] != null && data['data'] is List) {
+            data['data'].forEach((value) {
+              products.add(
+                ProductObject(
+                  id: value['_id'],
+                  productFirstName: value['product_first_name'] ?? 'Unknown',
+                  productLastName: value['product_last_name'] ?? 'Unknown',
+                  productDesc: value['product_desc'] ?? 'No description',
+                  productPrice: value['product_price'] ?? 0,
+                  productPic: value['product_pic'] ?? '',
+                  productType: value['product_type'] ?? 'Unknown',
+                  isInstock: value['is_instock'] ?? false,
+                ),
+              );
+            });
+          }
+        } else {
+          print(
+              "Failed to load product details. Status code: ${res.statusCode}");
+        }
+      }
+
+      return products;
+    } catch (e) {
+      print("Error fetching product details: $e");
+      return [];
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  void fetchData() async {
+    try {
+      List<TopPickObject> topPicks = await getTopPicks();
+
+      List<ProductObject> products = await getProduct(topPicks);
+
+      setState(() {});
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,86 +336,127 @@ class _TopPicksPagesState extends State<TopPicksPages> {
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              childCount: 10,
-              (BuildContext context, int index) {
-                return Stack(
-                  alignment: Alignment.centerRight,
-                  children: [
-                    Container(
-                      alignment: Alignment.centerRight,
-                      margin: const EdgeInsets.only(top: 20),
-                      width: MediaQuery.of(context).size.width / 1.2,
-                      height: 150,
-                      decoration: const BoxDecoration(
-                        color: kPrimaryColor,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          bottomLeft: Radius.circular(40),
-                        ),
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  "Echeveria\nElegans",
-                                  style: kDarkAppThemeData.textTheme.titleSmall,
-                                ),
-                                Text(
-                                  "580 Rs.",
-                                  style: kLightAppThemeData.textTheme.bodyLarge,
-                                )
-                              ],
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                showBottomSheet(
-                                  context: context,
-                                  builder: (context) {
-                                    return const BottomSheetPage();
-                                  },
-                                );
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: 60,
-                                width: 60,
-                                decoration: const BoxDecoration(
-                                  color: kButtonColor,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                child: const Icon(
-                                  Icons.add,
-                                  size: 45,
-                                  color: kMainTextColor,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: 0,
-                      top: 35,
-                      child: Image(
-                        width: 120,
-                        height: 120,
-                        image: AssetImage("assets/images/plant2.png"),
-                      ),
-                    )
-                  ],
+          FutureBuilder(
+            future: getTopPicks().then((topPicks) => getProduct(topPicks)),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData) {
+                return const SliverToBoxAdapter(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 );
-              },
-            ),
+              } else {
+                List<ProductObject> list = snapshot.data;
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    childCount: list.length,
+                    (BuildContext context, int index) {
+                      var product = list[index];
+                      var image = product.productPic;
+                      var firstName = product.productFirstName;
+                      var lastName = product.productLastName;
+                      var price = product.productPrice;
+                      return Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          Container(
+                            alignment: Alignment.centerRight,
+                            margin: const EdgeInsets.only(top: 20),
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            height: 150,
+                            decoration: const BoxDecoration(
+                              color: kPrimaryColor,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(40),
+                                bottomLeft: Radius.circular(40),
+                              ),
+                            ),
+                            child: Container(
+                              padding: lastName != ""
+                                  ? const EdgeInsets.only(left: 20)
+                                  : const EdgeInsets.only(
+                                      top: 20, left: 20, bottom: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        firstName ?? 'Unknown',
+                                        style: kDarkAppThemeData
+                                            .textTheme.titleSmall,
+                                      ),
+                                      lastName != ""
+                                          ? Text(
+                                              lastName ?? 'Unknown',
+                                              style: kDarkAppThemeData
+                                                  .textTheme.titleSmall,
+                                            )
+                                          : const SizedBox(),
+                                      Text(
+                                        '₹$price',
+                                        style: kLightAppThemeData
+                                            .textTheme.titleSmall,
+                                      ),
+                                    ],
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      showBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          return const BottomSheetPage();
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 60,
+                                      width: 60,
+                                      decoration: const BoxDecoration(
+                                        color: kButtonColor,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                      ),
+                                      child: const Icon(
+                                        Icons.add,
+                                        size: 45,
+                                        color: kMainTextColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 0,
+                            top: 35,
+                            child: image!.startsWith('http')
+                                ? Image.network(
+                                    image,
+                                    height: 120,
+                                    width: 120,
+                                    fit: BoxFit.fitHeight,
+                                  )
+                                : Image.memory(
+                                    base64Decode(image),
+                                    height: 120,
+                                    width: 120,
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              }
+            },
           ),
         ],
       ),
