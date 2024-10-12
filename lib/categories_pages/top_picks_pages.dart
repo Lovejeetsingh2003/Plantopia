@@ -108,7 +108,7 @@ class _TopPicksPagesState extends State<TopPicksPages> {
   void fetchData() async {
     try {
       List<TopPickObject> topPicks = await getTopPicks();
-
+      // ignore: unused_local_variable
       List<ProductObject> products = await getProduct(topPicks);
 
       setState(() {});

@@ -1,4 +1,4 @@
-const url = 'http://172.21.18.2:7000/';
+const url = 'http://192.168.1.13:7000/';
 
 const signUpApi = '${url}registeration';
 
@@ -11,3 +11,5 @@ const getProductApi = '${url}getproduct';
 const getTopPickApi = '${url}gettoppick';
 
 const getProductByIdApi = '${url}getproductbyid';
+
+const getRecommendedApi = '${url}getrecommended';

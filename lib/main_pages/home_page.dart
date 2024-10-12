@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:plantopia/cart/cart_page.dart';
 import 'package:plantopia/categories_pages/all_types_page.dart';
@@ -5,7 +7,11 @@ import 'package:plantopia/categories_pages/indoor_plants_page.dart';
 import 'package:plantopia/categories_pages/outdoor_plants_page.dart';
 import 'package:plantopia/categories_pages/top_picks_pages.dart';
 import 'package:plantopia/colors.dart';
+import 'package:plantopia/config.dart';
 import 'package:plantopia/main.dart';
+import 'package:plantopia/objects/product_object.dart';
+import 'package:plantopia/objects/recommended_object.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,6 +21,106 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static getRecommended() async {
+    List<RecommendedObject> recommended = [];
+    try {
+      final res = await http.get(
+        Uri.parse(getRecommendedApi),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+      );
+
+      if (res.statusCode == 200) {
+        var data = jsonDecode(res.body);
+
+        if (data['data'] != null && data['data'] is List) {
+          data['data'].forEach((value) {
+            recommended.add(
+              RecommendedObject(
+                id: value['_id'],
+                productId: value['product_id'],
+              ),
+            );
+          });
+
+          return recommended;
+        } else {
+          print("No products found");
+          return [];
+        }
+      } else {
+        print(
+            "Failed Recommended to load products. Status code: ${res.statusCode}");
+        return [];
+      }
+    } catch (e) {
+      print("error : $e");
+      return [];
+    }
+  }
+
+  static Future<List<ProductObject>> getProduct(
+      List<RecommendedObject> recommended_list) async {
+    List<ProductObject> products = [];
+    try {
+      for (var recommended in recommended_list) {
+        var body = {"id": recommended.productId};
+        var res = await http.post(
+          Uri.parse(getProductByIdApi),
+          body: jsonEncode(body),
+          headers: {"Content-Type": "application/json; charset=UTF-8"},
+        );
+
+        if (res.statusCode == 200) {
+          var data = jsonDecode(res.body);
+
+          if (data['data'] != null && data['data'] is List) {
+            data['data'].forEach((value) {
+              products.add(
+                ProductObject(
+                  id: value['_id'],
+                  productFirstName: value['product_first_name'] ?? 'Unknown',
+                  productLastName: value['product_last_name'] ?? 'Unknown',
+                  productDesc: value['product_desc'] ?? 'No description',
+                  productPrice: value['product_price'] ?? 0,
+                  productPic: value['product_pic'] ?? '',
+                  productType: value['product_type'] ?? 'Unknown',
+                  isInstock: value['is_instock'] ?? false,
+                ),
+              );
+            });
+          }
+        } else {
+          print(
+              "Failed to load product details. Status code: ${res.statusCode}");
+        }
+      }
+
+      return products;
+    } catch (e) {
+      print("Error fetching product details: $e");
+      return [];
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  void fetchData() async {
+    try {
+      List<RecommendedObject> topPicks = await getRecommended();
+
+      // ignore: unused_local_variable
+      List<ProductObject> products = await getProduct(topPicks);
+
+      setState(() {});
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -395,64 +501,100 @@ class _HomePageState extends State<HomePage> {
             Container(
               margin: const EdgeInsets.only(left: 20),
               height: 250,
-              child: ListView.builder(
-                itemCount: 10,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.all(10),
-                    height: 250,
-                    width: 250,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                      color: kInvisibleGreenContainerColor,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Image(
-                            width: 100,
-                            image: AssetImage("assets/images/plant2.png"),
+              child: FutureBuilder(
+                future: getRecommended()
+                    .then((recommended) => getProduct(recommended)),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    List<ProductObject> list = snapshot.data;
+                    return ListView.builder(
+                      itemCount: list.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        var product = list[index];
+                        var image = product.productPic;
+                        var firstName = product.productFirstName;
+                        var lastName = product.productLastName;
+                        var price = product.productPrice;
+                        return Container(
+                          margin: const EdgeInsets.all(10),
+                          height: 250,
+                          width: 250,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            color: kInvisibleGreenContainerColor,
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                "Echeveria\nElegans",
-                                style: kLightAppThemeData.textTheme.titleSmall,
-                              ),
-                              Text(
-                                "580.00 Rs.",
-                                style: kLightAppThemeData.textTheme.bodyMedium,
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                height: 50,
-                                width: 130,
-                                decoration: const BoxDecoration(
-                                  color: kPrimaryColor,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                image!.startsWith('http')
+                                    ? Image.network(
+                                        image,
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.fitHeight,
+                                      )
+                                    : Image.memory(
+                                        base64Decode(image),
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.fitHeight,
+                                      ),
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      firstName ?? "unknown",
+                                      style: kLightAppThemeData
+                                          .textTheme.bodyMedium,
+                                    ),
+                                    Text(
+                                      lastName ?? "unknown",
+                                      style: kLightAppThemeData
+                                          .textTheme.bodyMedium,
+                                    ),
+                                    Text(
+                                      '₹$price',
+                                      style: kLightAppThemeData
+                                          .textTheme.bodySmall,
+                                    ),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      height: 50,
+                                      width: 130,
+                                      decoration: const BoxDecoration(
+                                        color: kPrimaryColor,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(15),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        textAlign: TextAlign.center,
+                                        "Add To Cart",
+                                        style: kLightAppThemeData
+                                            .textTheme.bodySmall,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  "Add To Cart",
-                                  style: kLightAppThemeData.textTheme.bodySmall,
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                  );
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),
