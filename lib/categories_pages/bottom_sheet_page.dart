@@ -1,10 +1,23 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:plantopia/colors.dart';
 import 'package:plantopia/main.dart';
 
 class BottomSheetPage extends StatefulWidget {
-  const BottomSheetPage({super.key});
+  final product_First_Name;
+  final product_Last_Name;
+  final product_price;
+  final product_desc;
+  final product_pic;
+  const BottomSheetPage(
+      {required this.product_First_Name,
+      required this.product_Last_Name,
+      required this.product_desc,
+      required this.product_pic,
+      required this.product_price,
+      super.key});
 
   @override
   State<BottomSheetPage> createState() => _BottomSheetPageState();
@@ -15,7 +28,7 @@ class _BottomSheetPageState extends State<BottomSheetPage> {
   bool animate = false;
 
   void pop() {
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       Navigator.of(context).pop(true);
     });
   }
@@ -38,117 +51,139 @@ class _BottomSheetPageState extends State<BottomSheetPage> {
           topRight: Radius.circular(30),
         ),
       ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
-                width: 150,
-                height: 150,
-                child: const Image(
-                  image: AssetImage("assets/images/plant1.png"),
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    "Calathea",
-                    style: kDarkAppThemeData.textTheme.titleSmall,
-                  ),
-                  Text(
-                    "580.00 Rs.",
-                    style: kLightAppThemeData.textTheme.bodyMedium,
-                  )
-                ],
-              ),
-            ],
-          ),
-          //Description
-          Container(
-            margin: const EdgeInsets.all(10),
-            child: Text(
-              "They are popular houseplants because they are easy to care for and have colorful, patterned leaves that move uniquely.",
-              style: kLightAppThemeData.textTheme.bodySmall,
-            ),
-          ),
-          // quantity
-          Container(
-            margin: const EdgeInsets.only(top: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (quantity == 1) {
-                        quantity = quantity;
-                      } else {
-                        quantity -= 1;
-                      }
-                    });
-                  },
-                  child: const Icon(
-                    Icons.remove,
-                    size: 35,
-                    color: kMainTextColor,
-                  ),
+                SizedBox(
+                  width: 150,
+                  height: 150,
+                  child: widget.product_pic!.startsWith('http')
+                      ? Image.network(
+                          widget.product_pic,
+                          height: 120,
+                          width: 120,
+                          fit: BoxFit.fitHeight,
+                        )
+                      : Image.memory(
+                          base64Decode(
+                            widget.product_pic,
+                          ),
+                          height: 120,
+                          width: 120,
+                          fit: BoxFit.fitHeight,
+                        ),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  width: 60,
-                  height: 60,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.product_First_Name,
+                      style: kDarkAppThemeData.textTheme.bodyMedium,
                     ),
-                    color: kButtonColor,
-                  ),
-                  child: Text(
-                    quantity.toString(),
-                    style: kLightAppThemeData.textTheme.titleMedium,
-                  ),
+                    Text(
+                      widget.product_Last_Name,
+                      style: kDarkAppThemeData.textTheme.bodyMedium,
+                    ),
+                    Text(
+                      "₹${widget.product_price}",
+                      style: kLightAppThemeData.textTheme.bodyMedium,
+                    )
+                  ],
                 ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      quantity += 1;
-                    });
-                  },
-                  child: const Icon(
-                    Icons.add,
-                    size: 35,
-                    color: kMainTextColor,
-                  ),
-                )
               ],
             ),
-          ),
-          //add to cart
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                animate = true;
-              });
-              pop();
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 30),
+            //Description
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: Text(
+                widget.product_desc,
+                style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: kMainTextColor),
+              ),
+            ),
+            // quantity
+            Container(
+              margin: const EdgeInsets.only(top: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Lottie.asset(
-                    repeat: false,
-                    animate: animate,
-                    frameRate: const FrameRate(80),
-                    "assets/lottie/add_to_cart.json",
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (quantity == 1) {
+                          quantity = quantity;
+                        } else {
+                          quantity -= 1;
+                        }
+                      });
+                    },
+                    child: const Icon(
+                      Icons.remove,
+                      size: 35,
+                      color: kMainTextColor,
+                    ),
                   ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 60,
+                    height: 60,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                      color: kButtonColor,
+                    ),
+                    child: Text(
+                      quantity.toString(),
+                      style: kLightAppThemeData.textTheme.titleMedium,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        quantity += 1;
+                      });
+                    },
+                    child: const Icon(
+                      Icons.add,
+                      size: 35,
+                      color: kMainTextColor,
+                    ),
+                  )
                 ],
               ),
             ),
-          ),
-        ],
+            //add to cart
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  animate = true;
+                });
+                pop();
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                      repeat: false,
+                      animate: animate,
+                      frameRate: const FrameRate(80),
+                      "assets/lottie/add_to_cart.json",
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

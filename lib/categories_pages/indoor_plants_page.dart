@@ -325,7 +325,15 @@ class _IndoorPlantsPageState extends State<IndoorPlantsPage> {
                                       showBottomSheet(
                                         context: context,
                                         builder: (context) {
-                                          return const BottomSheetPage();
+                                          return BottomSheetPage(
+                                            product_First_Name:
+                                                product.productFirstName,
+                                            product_Last_Name:
+                                                product.productLastName,
+                                            product_desc: product.productDesc,
+                                            product_pic: product.productPic,
+                                            product_price: product.productPrice,
+                                          );
                                         },
                                       );
                                     },
