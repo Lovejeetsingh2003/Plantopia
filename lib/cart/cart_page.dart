@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:plantopia/colors.dart';
 import 'package:plantopia/config.dart';
 import 'package:plantopia/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:plantopia/objects/cart_object.dart';
-
 import '../objects/product_object.dart';
 
 class CartPage extends StatefulWidget {
@@ -54,6 +54,34 @@ class _CartPageState extends State<CartPage> {
       print("error : $e");
       return [];
     }
+  }
+
+  void deleteCartProducts(id) async {
+    var body = {
+      "_id": id,
+    };
+    try {
+      var res = await http.post(
+        Uri.parse(deleteCartProduct),
+        body: jsonEncode(body),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+      );
+
+      if (res.statusCode == 200) {
+        Fluttertoast.showToast(msg: "The Product successfully deleted");
+        setState(() {});
+      } else {
+        Fluttertoast.showToast(msg: "Some error occur while deleting Product.");
+      }
+    } catch (e) {
+      print("error : $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> getCartAndProducts() async {
+    var cart = await getCart();
+    var product = await getProduct(cart);
+    return {'cart': cart, 'product': product};
   }
 
   static Future<List<ProductObject>> getProduct(
@@ -169,16 +197,17 @@ class _CartPageState extends State<CartPage> {
 
               // cart list
               FutureBuilder(
-                future: getCart().then((cart) => getProduct(cart)),
+                future: getCartAndProducts(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (!snapshot.hasData) {
-                    return const SliverToBoxAdapter(
+                    return const SizedBox(
                       child: Center(
                         child: CircularProgressIndicator(),
                       ),
                     );
                   } else {
-                    List<ProductObject> list = snapshot.data;
+                    List<ProductObject> list = snapshot.data!['product'];
+                    List<CartObject> cartList = snapshot.data!['cart'];
                     return ListView.builder(
                       shrinkWrap: true,
                       controller: ScrollController(keepScrollOffset: false),
@@ -186,6 +215,7 @@ class _CartPageState extends State<CartPage> {
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
                         var product = list[index];
+                        var cartData = cartList[index];
                         var image = product.productPic;
                         var firstName = product.productFirstName;
                         var lastName = product.productLastName;
@@ -199,115 +229,130 @@ class _CartPageState extends State<CartPage> {
                               Radius.circular(40),
                             ),
                           ),
-                          child: Container(
+                          child: Padding(
                             padding: const EdgeInsets.all(5),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.only(right: 20),
-                                  child: SizedBox(
-                                    height: 80,
-                                    width: 80,
-                                    child: image!.startsWith('http')
-                                        ? Image.network(
-                                            image,
-                                            height: 80,
-                                            width: 80,
-                                            fit: BoxFit.fitHeight,
-                                          )
-                                        : Image.memory(
-                                            base64Decode(image),
-                                            height: 80,
-                                            width: 80,
-                                            fit: BoxFit.fitHeight,
-                                          ),
-                                  ),
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                //pic
+                                Row(
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Text(
-                                              firstName ?? 'Unknown',
-                                              style: kLightAppThemeData
-                                                  .textTheme.titleSmall,
+                                    SizedBox(
+                                      height: 100,
+                                      width: 100,
+                                      child: image!.startsWith('http')
+                                          ? Image.network(
+                                              image,
+                                              height: 100,
+                                              width: 100,
+                                              fit: BoxFit.fitHeight,
+                                            )
+                                          : Image.memory(
+                                              base64Decode(image),
+                                              height: 100,
+                                              width: 100,
+                                              fit: BoxFit.fitHeight,
                                             ),
-                                            lastName == ""
-                                                ? Container()
-                                                : Text(
-                                                    lastName ?? 'Unknown',
-                                                    style: kLightAppThemeData
-                                                        .textTheme.titleSmall,
-                                                  ),
-                                          ],
-                                        ),
-                                      ],
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 5),
-                                      child: Text(
-                                        '₹$price',
-                                        style: kLightAppThemeData
-                                            .textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                    Row(
+                                  ],
+                                ),
+                                //data
+                                Row(
+                                  children: [
+                                    Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              if (quantity == 1) {
-                                                quantity = quantity;
-                                              } else {
-                                                quantity -= 1;
-                                              }
-                                            });
-                                          },
-                                          child: const Icon(
-                                            Icons.remove,
-                                            size: 25,
-                                            color: kMainTextColor,
-                                          ),
+                                        Text(
+                                          firstName ?? 'Unknown',
+                                          style: kDarkAppThemeData
+                                              .textTheme.titleSmall,
+                                        ),
+                                        lastName != ""
+                                            ? Text(
+                                                lastName ?? 'Unknown',
+                                                style: kDarkAppThemeData
+                                                    .textTheme.titleSmall,
+                                              )
+                                            : const SizedBox(),
+                                        Text(
+                                          '₹$price',
+                                          style: kLightAppThemeData
+                                              .textTheme.titleSmall,
                                         ),
                                         Container(
-                                          alignment: Alignment.center,
-                                          width: 40,
-                                          height: 40,
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(10),
-                                            ),
-                                            color: kButtonColor,
-                                          ),
-                                          child: Text(
-                                            quantity.toString(),
-                                            style: kLightAppThemeData
-                                                .textTheme.titleSmall,
+                                          margin: const EdgeInsets.only(top: 5),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    if (quantity == 1) {
+                                                      quantity = quantity;
+                                                    } else {
+                                                      quantity -= 1;
+                                                    }
+                                                  });
+                                                },
+                                                child: const Icon(
+                                                  Icons.remove,
+                                                  size: 30,
+                                                  color: kMainTextColor,
+                                                ),
+                                              ),
+                                              Container(
+                                                alignment: Alignment.center,
+                                                width: 40,
+                                                height: 40,
+                                                decoration: const BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10),
+                                                  ),
+                                                  color: kButtonColor,
+                                                ),
+                                                child: Text(
+                                                  cartData.quantity.toString(),
+                                                  style: kLightAppThemeData
+                                                      .textTheme.titleSmall,
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    quantity += 1;
+                                                  });
+                                                },
+                                                child: const Icon(
+                                                  Icons.add,
+                                                  size: 30,
+                                                  color: kMainTextColor,
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              quantity += 1;
-                                            });
-                                          },
-                                          child: const Icon(
-                                            Icons.add,
-                                            size: 25,
-                                            color: kMainTextColor,
-                                          ),
-                                        )
                                       ],
                                     ),
+                                  ],
+                                ),
+                                //delete option
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          deleteCartProducts(cartData.id);
+                                        });
+                                      },
+                                      child: const Icon(
+                                        Icons.delete,
+                                        size: 35,
+                                        color: kMainTextColor,
+                                      ),
+                                    )
                                   ],
                                 ),
                               ],

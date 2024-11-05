@@ -17,3 +17,5 @@ const getRecommendedApi = '${url}getrecommended';
 const addCart = '${url}addtocart';
 
 const getCartProducts = '${url}getcartproducts';
+
+const deleteCartProduct = '${url}getcartproducts';
