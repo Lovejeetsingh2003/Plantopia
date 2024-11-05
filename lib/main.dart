@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plantopia/colors.dart';
-import 'package:plantopia/login_pages/welcome_page.dart';
+
+import 'main_pages/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: kLightAppThemeData,
       darkTheme: kDarkAppThemeData,
-      home: const WelcomePage(),
+      home: const HomePage(),
     );
   }
 }

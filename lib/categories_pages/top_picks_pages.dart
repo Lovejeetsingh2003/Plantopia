@@ -122,6 +122,7 @@ class _TopPicksPagesState extends State<TopPicksPages> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        scrolledUnderElevation: 0.0,
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(
@@ -186,7 +187,7 @@ class _TopPicksPagesState extends State<TopPicksPages> {
         slivers: [
           SliverAppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: kPrimaryColor,
             pinned: false,
             centerTitle: false,
             stretch: true,
@@ -224,7 +225,7 @@ class _TopPicksPagesState extends State<TopPicksPages> {
           ),
           SliverAppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: kWhiteColor,
             elevation: 0,
             pinned: true,
             bottom: const PreferredSize(
@@ -361,7 +362,7 @@ class _TopPicksPagesState extends State<TopPicksPages> {
                         children: [
                           Container(
                             alignment: Alignment.centerRight,
-                            margin: const EdgeInsets.only(top: 20),
+                            margin: const EdgeInsets.symmetric(vertical: 10),
                             width: MediaQuery.of(context).size.width / 1.2,
                             height: 150,
                             decoration: const BoxDecoration(

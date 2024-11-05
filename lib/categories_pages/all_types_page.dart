@@ -69,6 +69,7 @@ class _AllTypesPageState extends State<AllTypesPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        scrolledUnderElevation: 0.0,
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(
