@@ -1,6 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:plantopia/colors.dart';
+import 'package:plantopia/config.dart';
 import 'package:plantopia/main.dart';
+import 'package:http/http.dart' as http;
+import 'package:plantopia/objects/cart_object.dart';
+
+import '../objects/product_object.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -11,10 +18,111 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   var quantity = 1;
+
+  static getCart() async {
+    List<CartObject> cart_object = [];
+    try {
+      final res = await http.get(
+        Uri.parse(getCartProducts),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+      );
+
+      if (res.statusCode == 200) {
+        var data = jsonDecode(res.body);
+
+        if (data['data'] != null && data['data'] is List) {
+          data['data'].forEach((value) {
+            cart_object.add(
+              CartObject(
+                quantity: value['quantity'],
+                productId: value['product_id'],
+              ),
+            );
+          });
+
+          return cart_object;
+        } else {
+          print("No products found");
+          return [];
+        }
+      } else {
+        print(
+            "Failed top pick to load products. Status code: ${res.statusCode}");
+        return [];
+      }
+    } catch (e) {
+      print("error : $e");
+      return [];
+    }
+  }
+
+  static Future<List<ProductObject>> getProduct(
+      List<CartObject> cart_object) async {
+    List<ProductObject> products = [];
+    try {
+      for (var cartProducts in cart_object) {
+        var body = {"id": cartProducts.productId};
+        var res = await http.post(
+          Uri.parse(getProductByIdApi),
+          body: jsonEncode(body),
+          headers: {"Content-Type": "application/json; charset=UTF-8"},
+        );
+
+        if (res.statusCode == 200) {
+          var data = jsonDecode(res.body);
+
+          if (data['data'] != null && data['data'] is List) {
+            data['data'].forEach((value) {
+              products.add(
+                ProductObject(
+                  id: value['_id'],
+                  productFirstName: value['product_first_name'] ?? 'Unknown',
+                  productLastName: value['product_last_name'] ?? 'Unknown',
+                  productDesc: value['product_desc'] ?? 'No description',
+                  productPrice: value['product_price'] ?? 0,
+                  productPic: value['product_pic'] ?? '',
+                  productType: value['product_type'] ?? 'Unknown',
+                  isInstock: value['is_instock'] ?? false,
+                ),
+              );
+            });
+          }
+        } else {
+          print(
+              "Failed to load product details. Status code: ${res.statusCode}");
+        }
+      }
+
+      return products;
+    } catch (e) {
+      print("Error fetching product details: $e");
+      return [];
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  void fetchData() async {
+    try {
+      List<CartObject> cart = await getCart();
+      // ignore: unused_local_variable
+      List<ProductObject> products = await getProduct(cart);
+
+      setState(() {});
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0.0,
         leadingWidth: 60,
         leading: GestureDetector(
           onTap: () {
@@ -60,114 +168,155 @@ class _CartPageState extends State<CartPage> {
               ),
 
               // cart list
-              ListView.builder(
-                shrinkWrap: true,
-                controller: ScrollController(keepScrollOffset: false),
-                itemCount: 2,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    height: 200,
-                    decoration: const BoxDecoration(
-                      color: kInvisibleGreenContainerColor,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(40),
+              FutureBuilder(
+                future: getCart().then((cart) => getProduct(cart)),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return const SliverToBoxAdapter(
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
+                    );
+                  } else {
+                    List<ProductObject> list = snapshot.data;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      controller: ScrollController(keepScrollOffset: false),
+                      itemCount: list.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                        var product = list[index];
+                        var image = product.productPic;
+                        var firstName = product.productFirstName;
+                        var lastName = product.productLastName;
+                        var price = product.productPrice;
+                        return Container(
+                          margin: const EdgeInsets.only(top: 10),
                           height: 200,
-                          width: MediaQuery.of(context).size.width / 3.5,
-                          child: Image(
-                            image: AssetImage("assets/images/plant2.png"),
+                          decoration: const BoxDecoration(
+                            color: kInvisibleGreenContainerColor,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(40),
+                            ),
                           ),
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            child: Row(
                               children: [
-                                Text(
-                                  "Echeveria\nElegans",
-                                  style:
-                                      kLightAppThemeData.textTheme.titleSmall,
-                                ),
                                 Container(
-                                  margin: const EdgeInsets.only(left: 20),
-                                  child: GestureDetector(
-                                    onTap: () {},
-                                    child: const Icon(
-                                      Icons.delete,
-                                      size: 30,
-                                      color: kMainTextColor,
-                                    ),
+                                  margin: const EdgeInsets.only(right: 20),
+                                  child: SizedBox(
+                                    height: 80,
+                                    width: 80,
+                                    child: image!.startsWith('http')
+                                        ? Image.network(
+                                            image,
+                                            height: 80,
+                                            width: 80,
+                                            fit: BoxFit.fitHeight,
+                                          )
+                                        : Image.memory(
+                                            base64Decode(image),
+                                            height: 80,
+                                            width: 80,
+                                            fit: BoxFit.fitHeight,
+                                          ),
                                   ),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Text(
+                                              firstName ?? 'Unknown',
+                                              style: kLightAppThemeData
+                                                  .textTheme.titleSmall,
+                                            ),
+                                            lastName == ""
+                                                ? Container()
+                                                : Text(
+                                                    lastName ?? 'Unknown',
+                                                    style: kLightAppThemeData
+                                                        .textTheme.titleSmall,
+                                                  ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      child: Text(
+                                        '₹$price',
+                                        style: kLightAppThemeData
+                                            .textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              if (quantity == 1) {
+                                                quantity = quantity;
+                                              } else {
+                                                quantity -= 1;
+                                              }
+                                            });
+                                          },
+                                          child: const Icon(
+                                            Icons.remove,
+                                            size: 25,
+                                            color: kMainTextColor,
+                                          ),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.center,
+                                          width: 40,
+                                          height: 40,
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                            color: kButtonColor,
+                                          ),
+                                          child: Text(
+                                            quantity.toString(),
+                                            style: kLightAppThemeData
+                                                .textTheme.titleSmall,
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              quantity += 1;
+                                            });
+                                          },
+                                          child: const Icon(
+                                            Icons.add,
+                                            size: 25,
+                                            color: kMainTextColor,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            Text(
-                              "580.00 Rs.",
-                              style: kLightAppThemeData.textTheme.bodyMedium,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (quantity == 1) {
-                                        quantity = quantity;
-                                      } else {
-                                        quantity -= 1;
-                                      }
-                                    });
-                                  },
-                                  child: const Icon(
-                                    Icons.remove,
-                                    size: 25,
-                                    color: kMainTextColor,
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  width: 40,
-                                  height: 40,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    color: kButtonColor,
-                                  ),
-                                  child: Text(
-                                    quantity.toString(),
-                                    style:
-                                        kLightAppThemeData.textTheme.titleSmall,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      quantity += 1;
-                                    });
-                                  },
-                                  child: const Icon(
-                                    Icons.add,
-                                    size: 25,
-                                    color: kMainTextColor,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
+                          ),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
               //apply coupon

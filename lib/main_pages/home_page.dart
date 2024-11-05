@@ -126,6 +126,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        scrolledUnderElevation: 0.0,
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 20),

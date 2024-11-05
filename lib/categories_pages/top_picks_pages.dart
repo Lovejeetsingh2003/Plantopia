@@ -410,6 +410,7 @@ class _TopPicksPagesState extends State<TopPicksPages> {
                                         context: context,
                                         builder: (context) {
                                           return BottomSheetPage(
+                                            productId: product.id,
                                             product_First_Name:
                                                 product.productFirstName,
                                             product_Last_Name:

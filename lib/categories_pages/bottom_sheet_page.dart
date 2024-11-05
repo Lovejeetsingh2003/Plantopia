@@ -1,11 +1,13 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:plantopia/colors.dart';
+import 'package:plantopia/config.dart';
 import 'package:plantopia/main.dart';
 
 class BottomSheetPage extends StatefulWidget {
+  final productId;
   final product_First_Name;
   final product_Last_Name;
   final product_price;
@@ -13,6 +15,7 @@ class BottomSheetPage extends StatefulWidget {
   final product_pic;
   const BottomSheetPage(
       {required this.product_First_Name,
+      required this.productId,
       required this.product_Last_Name,
       required this.product_desc,
       required this.product_pic,
@@ -26,6 +29,27 @@ class BottomSheetPage extends StatefulWidget {
 class _BottomSheetPageState extends State<BottomSheetPage> {
   var quantity = 1;
   bool animate = false;
+
+  void addToCart() async {
+    try {
+      var response;
+      var body = {"product_id": widget.productId, "quantity": quantity};
+      response = await http.post(
+        Uri.parse(addCart),
+        body: jsonEncode(body),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+      );
+
+      if (response.statusCode == 200) {
+        var message = jsonDecode(response.body);
+        print("Message: $message");
+      } else {
+        print("Error : ${response.body}");
+      }
+    } catch (e) {
+      print("Error : $e");
+    }
+  }
 
   void pop() {
     Future.delayed(const Duration(seconds: 5), () {
@@ -162,6 +186,7 @@ class _BottomSheetPageState extends State<BottomSheetPage> {
             //add to cart
             GestureDetector(
               onTap: () {
+                addToCart();
                 setState(() {
                   animate = true;
                 });

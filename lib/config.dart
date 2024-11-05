@@ -13,3 +13,7 @@ const getTopPickApi = '${url}gettoppick';
 const getProductByIdApi = '${url}getproductbyid';
 
 const getRecommendedApi = '${url}getrecommended';
+
+const addCart = '${url}addtocart';
+
+const getCartProducts = '${url}getcartproducts';
