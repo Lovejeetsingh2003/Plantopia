@@ -18,7 +18,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   var quantity = 1;
-
+  var SubTotal = 0;
   static getCart() async {
     List<CartObject> cart_object = [];
     try {
@@ -34,6 +34,7 @@ class _CartPageState extends State<CartPage> {
           data['data'].forEach((value) {
             cart_object.add(
               CartObject(
+                id: value['_id'],
                 quantity: value['quantity'],
                 productId: value['product_id'],
               ),
@@ -194,7 +195,6 @@ class _CartPageState extends State<CartPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               // cart list
               FutureBuilder(
                 future: getCartAndProducts(),
@@ -214,12 +214,17 @@ class _CartPageState extends State<CartPage> {
                       itemCount: list.length,
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
+                        var total = 0;
                         var product = list[index];
                         var cartData = cartList[index];
                         var image = product.productPic;
                         var firstName = product.productFirstName;
                         var lastName = product.productLastName;
                         var price = product.productPrice;
+                        total = list[index].productPrice! *
+                            cartList[index].quantity!;
+                        SubTotal += total;
+// 1317 + 1857 + 1378 + 1895
                         return Container(
                           margin: const EdgeInsets.only(top: 10),
                           height: 200,
@@ -344,6 +349,8 @@ class _CartPageState extends State<CartPage> {
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
+                                          print(
+                                              "cart Product id : ${cartData.id}");
                                           deleteCartProducts(cartData.id);
                                         });
                                       },
@@ -364,6 +371,7 @@ class _CartPageState extends State<CartPage> {
                   }
                 },
               ),
+
               //apply coupon
               Container(
                 margin: const EdgeInsets.only(top: 20),
@@ -431,7 +439,7 @@ class _CartPageState extends State<CartPage> {
                           style: kLightAppThemeData.textTheme.bodyMedium,
                         ),
                         Text(
-                          "1550.00 Rs.",
+                          SubTotal.toString(),
                           style: kLightAppThemeData.textTheme.bodyMedium,
                         )
                       ],

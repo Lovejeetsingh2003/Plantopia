@@ -158,23 +158,6 @@ class _IndoorPlantsPageState extends State<IndoorPlantsPage> {
                     color: kMainTextColor,
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    height: 45,
-                    width: 45,
-                    decoration: const BoxDecoration(
-                      color: kButtonColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.shopping_bag,
-                      size: 30,
-                      color: kMainTextColor,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

@@ -18,4 +18,4 @@ const addCart = '${url}addtocart';
 
 const getCartProducts = '${url}getcartproducts';
 
-const deleteCartProduct = '${url}getcartproducts';
+const deleteCartProduct = '${url}deletefromcart';
