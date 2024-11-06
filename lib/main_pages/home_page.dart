@@ -13,6 +13,8 @@ import 'package:plantopia/objects/product_object.dart';
 import 'package:plantopia/objects/recommended_object.dart';
 import 'package:http/http.dart' as http;
 
+import '../categories_pages/bottom_sheet_page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -570,21 +572,51 @@ class _HomePageState extends State<HomePage> {
                                       style: kLightAppThemeData
                                           .textTheme.bodySmall,
                                     ),
-                                    Container(
-                                      alignment: Alignment.center,
-                                      height: 50,
-                                      width: 130,
-                                      decoration: const BoxDecoration(
-                                        color: kPrimaryColor,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(15),
+                                    GestureDetector(
+                                      onTap: () {
+                                        showBottomSheet(
+                                          sheetAnimationStyle: AnimationStyle(
+                                            reverseDuration:
+                                                const Duration(seconds: 2),
+                                            reverseCurve: Curves.bounceOut,
+                                            curve: Curves.bounceIn,
+                                            duration:
+                                                const Duration(seconds: 2),
+                                          ),
+                                          enableDrag: true,
+                                          showDragHandle: true,
+                                          context: context,
+                                          builder: (context) {
+                                            return BottomSheetPage(
+                                              productId: product.id,
+                                              product_First_Name:
+                                                  product.productFirstName,
+                                              product_Last_Name:
+                                                  product.productLastName,
+                                              product_desc: product.productDesc,
+                                              product_pic: product.productPic,
+                                              product_price:
+                                                  product.productPrice,
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        height: 50,
+                                        width: 130,
+                                        decoration: const BoxDecoration(
+                                          color: kPrimaryColor,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
                                         ),
-                                      ),
-                                      child: Text(
-                                        textAlign: TextAlign.center,
-                                        "Add To Cart",
-                                        style: kLightAppThemeData
-                                            .textTheme.bodySmall,
+                                        child: Text(
+                                          textAlign: TextAlign.center,
+                                          "Add To Cart",
+                                          style: kLightAppThemeData
+                                              .textTheme.bodySmall,
+                                        ),
                                       ),
                                     ),
                                   ],

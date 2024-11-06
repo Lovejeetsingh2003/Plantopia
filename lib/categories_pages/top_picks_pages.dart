@@ -390,6 +390,15 @@ class _TopPicksPagesState extends State<TopPicksPages> {
                                   GestureDetector(
                                     onTap: () {
                                       showBottomSheet(
+                                        showDragHandle: true,
+                                        sheetAnimationStyle: AnimationStyle(
+                                          reverseDuration:
+                                              const Duration(seconds: 2),
+                                          reverseCurve: Curves.bounceOut,
+                                          curve: Curves.bounceIn,
+                                          duration: const Duration(seconds: 2),
+                                        ),
+                                        enableDrag: true,
                                         context: context,
                                         builder: (context) {
                                           return BottomSheetPage(

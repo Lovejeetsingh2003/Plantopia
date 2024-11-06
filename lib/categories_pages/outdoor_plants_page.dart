@@ -172,7 +172,7 @@ class _OutdoorPlantsPageState extends State<OutdoorPlantsPage> {
         slivers: [
           SliverAppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: kPrimaryColor,
             pinned: false,
             centerTitle: false,
             stretch: true,
@@ -305,6 +305,15 @@ class _OutdoorPlantsPageState extends State<OutdoorPlantsPage> {
                                   GestureDetector(
                                     onTap: () {
                                       showBottomSheet(
+                                        showDragHandle: true,
+                                        sheetAnimationStyle: AnimationStyle(
+                                          reverseDuration:
+                                              const Duration(seconds: 2),
+                                          reverseCurve: Curves.bounceOut,
+                                          curve: Curves.bounceIn,
+                                          duration: const Duration(seconds: 2),
+                                        ),
+                                        enableDrag: true,
                                         context: context,
                                         builder: (context) {
                                           return BottomSheetPage(
