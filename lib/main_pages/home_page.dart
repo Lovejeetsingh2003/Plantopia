@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:plantopia/cart/cart_page.dart';
 import 'package:plantopia/categories_pages/all_types_page.dart';
@@ -9,10 +8,10 @@ import 'package:plantopia/categories_pages/top_picks_pages.dart';
 import 'package:plantopia/colors.dart';
 import 'package:plantopia/config.dart';
 import 'package:plantopia/main.dart';
+import 'package:plantopia/main_pages/side_menu.dart';
 import 'package:plantopia/objects/product_object.dart';
 import 'package:plantopia/objects/recommended_object.dart';
 import 'package:http/http.dart' as http;
-
 import '../categories_pages/bottom_sheet_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,6 +22,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var scaffoldKey = GlobalKey<ScaffoldState>();
   static getRecommended() async {
     List<RecommendedObject> recommended = [];
     try {
@@ -126,8 +126,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
+      drawer: const SideMenu(),
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         scrolledUnderElevation: 0.0,
         actions: [
           Container(
@@ -170,7 +173,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    scaffoldKey.currentState?.openDrawer();
+                  },
                   child: const Icon(
                     Icons.menu,
                     size: 30,
