@@ -163,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Does'nt Have Any Account?",
+                  "Don't Have An Account?",
                   style: kLightAppThemeData.textTheme.bodySmall,
                 ),
                 GestureDetector(

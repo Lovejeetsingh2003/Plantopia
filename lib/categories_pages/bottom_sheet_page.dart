@@ -27,8 +27,49 @@ class BottomSheetPage extends StatefulWidget {
 }
 
 class _BottomSheetPageState extends State<BottomSheetPage> {
+  var is_favourite = false;
   var quantity = 1;
   bool animate = false;
+
+  void addFavourite() async {
+    try {
+      var response;
+      var body = {"product_id": widget.productId, "is_favourite": is_favourite};
+      response = await http.post(
+        Uri.parse(addFavouriteProduct),
+        body: jsonEncode(body),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+      );
+
+      if (response.statusCode == 200) {
+        var message = jsonDecode(response.body);
+        print("Message: $message");
+      } else {
+        print("Error : ${response.body}");
+      }
+    } catch (e) {
+      print("Error : $e");
+    }
+  }
+
+  // void deleteFavourite() async {
+  //   try {
+  //     var res = await http.post(
+  //       Uri.parse(deleteFavouriteProduct),
+  //       headers: {"Content-Type": "application/json; charset=UTF-8"},
+  //     );
+
+  //     if (res.statusCode == 200) {
+  //       Fluttertoast.showToast(
+  //           msg: "The Favourite Product successfully deleted");
+  //       setState(() {});
+  //     } else {
+  //       Fluttertoast.showToast(msg: "Some error occur while deleting Product.");
+  //     }
+  //   } catch (e) {
+  //     print("error : $e");
+  //   }
+  // }
 
   void addToCart() async {
     try {
@@ -118,6 +159,24 @@ class _BottomSheetPageState extends State<BottomSheetPage> {
                     )
                   ],
                 ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (is_favourite == false) {
+                        is_favourite = true;
+                        addFavourite();
+                      } else {
+                        is_favourite = false;
+                        // deleteFavourite();
+                      }
+                    });
+                  },
+                  child: Icon(
+                    Icons.favorite,
+                    size: 30,
+                    color: is_favourite == false ? kMainTextColor : kRedColor,
+                  ),
+                )
               ],
             ),
             //Description

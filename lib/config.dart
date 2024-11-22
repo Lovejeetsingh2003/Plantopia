@@ -1,4 +1,4 @@
-const url = 'http://192.168.1.10:7000/';
+const url = 'http://192.168.1.19:7000/';
 
 const signUpApi = '${url}registeration';
 
@@ -19,3 +19,9 @@ const addCart = '${url}addtocart';
 const getCartProducts = '${url}getcartproducts';
 
 const deleteCartProduct = '${url}deletefromcart';
+
+const addFavouriteProduct = '${url}addfavouriteproduct';
+
+const getFavouriteProduct = '${url}getfavouriteproduct';
+
+const deleteFavouriteProduct = '${url}deletefavouriteproduct';

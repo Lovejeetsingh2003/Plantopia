@@ -8,7 +8,7 @@ import 'package:plantopia/categories_pages/top_picks_pages.dart';
 import 'package:plantopia/colors.dart';
 import 'package:plantopia/config.dart';
 import 'package:plantopia/main.dart';
-import 'package:plantopia/main_pages/side_menu.dart';
+import 'package:plantopia/side_menu/side_menu.dart';
 import 'package:plantopia/objects/product_object.dart';
 import 'package:plantopia/objects/recommended_object.dart';
 import 'package:http/http.dart' as http;

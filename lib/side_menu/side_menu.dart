@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:plantopia/colors.dart';
 import 'package:plantopia/main.dart';
-import 'info_card.dart';
+import 'package:plantopia/side_menu/favourites_page.dart';
+import '../main_pages/info_card.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({super.key});
@@ -14,21 +15,6 @@ class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      // floatingActionButton: FloatingActionButton(
-      //     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      //     backgroundColor: kMainTextColor,
-      //     shape: ShapeBorder.lerp(
-      //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-      //       const CircleBorder(),
-      //       0.5,
-      //     ),
-      //     child: const Icon(
-      //       Icons.close,
-      //       size: 35,
-      //       color: kPrimaryColor,
-      //     ),
-      //     onPressed: () {}),
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Row(
@@ -39,7 +25,6 @@ class _SideMenuState extends State<SideMenu> {
               decoration: const BoxDecoration(
                 color: kPrimaryColor,
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40),
                   bottomRight: Radius.circular(40),
                 ),
               ),
@@ -70,7 +55,17 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                   ListTile(
                     minTileHeight: 80,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const FavouritesPage(),
+                          transitionDuration: const Duration(seconds: 2),
+                          transitionsBuilder: (_, a, __, c) =>
+                              FadeTransition(opacity: a, child: c),
+                        ),
+                      );
+                    },
                     leading: const Icon(
                       Icons.favorite,
                       color: Colors.red,
