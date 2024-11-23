@@ -1,4 +1,4 @@
-const url = 'http://192.168.1.19:7000/';
+const url = 'http://172.21.18.116:7000/';
 
 const signUpApi = '${url}registeration';
 

@@ -13,6 +13,7 @@ class BottomSheetPage extends StatefulWidget {
   final product_price;
   final product_desc;
   final product_pic;
+
   const BottomSheetPage(
       {required this.product_First_Name,
       required this.productId,
@@ -74,7 +75,11 @@ class _BottomSheetPageState extends State<BottomSheetPage> {
   void addToCart() async {
     try {
       var response;
-      var body = {"product_id": widget.productId, "quantity": quantity};
+      var body = {
+        "product_id": widget.productId,
+        "quantity": quantity,
+        "price": widget.product_price
+      };
       response = await http.post(
         Uri.parse(addCart),
         body: jsonEncode(body),
