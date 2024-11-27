@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:plantopia/colors.dart';
 import 'package:plantopia/main.dart';
-import 'package:plantopia/side_menu/favourites_page.dart';
+import 'package:plantopia/side_menu/about_page.dart';
+import 'package:plantopia/side_menu/acc_details_page.dart';
+import 'package:plantopia/side_menu/feedback_page.dart';
+import 'package:plantopia/side_menu/order_history_page.dart';
+import 'package:plantopia/side_menu/setting_page.dart';
 import '../main_pages/info_card.dart';
 
 class SideMenu extends StatefulWidget {
@@ -35,7 +39,17 @@ class _SideMenuState extends State<SideMenu> {
                   const InfoCard(name: "Test", email: "test1@gmai.com"),
                   ListTile(
                     minTileHeight: 80,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const AccDetailsPage(),
+                          transitionDuration: const Duration(seconds: 2),
+                          transitionsBuilder: (_, a, __, c) =>
+                              FadeTransition(opacity: a, child: c),
+                        ),
+                      );
+                    },
                     leading: const Icon(
                       Icons.person,
                       color: kMainTextColor,
@@ -59,33 +73,13 @@ class _SideMenuState extends State<SideMenu> {
                       Navigator.push(
                         context,
                         PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => const FavouritesPage(),
+                          pageBuilder: (_, __, ___) => const OrderHistoryPage(),
                           transitionDuration: const Duration(seconds: 2),
                           transitionsBuilder: (_, a, __, c) =>
                               FadeTransition(opacity: a, child: c),
                         ),
                       );
                     },
-                    leading: const Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                      size: 30,
-                    ),
-                    title: Text(
-                      "Favourites",
-                      style: kLightAppThemeData.textTheme.bodyMedium,
-                    ),
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    indent: 30,
-                    endIndent: 30,
-                    color: kMainTextColor,
-                  ),
-                  ListTile(
-                    minTileHeight: 80,
-                    onTap: () {},
                     leading: const Icon(
                       Icons.history,
                       color: kMainTextColor,
@@ -105,7 +99,17 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                   ListTile(
                     minTileHeight: 80,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const SettingPage(),
+                          transitionDuration: const Duration(seconds: 2),
+                          transitionsBuilder: (_, a, __, c) =>
+                              FadeTransition(opacity: a, child: c),
+                        ),
+                      );
+                    },
                     leading: const Icon(
                       Icons.settings,
                       color: kMainTextColor,
@@ -125,7 +129,17 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                   ListTile(
                     minTileHeight: 80,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const AboutPage(),
+                          transitionDuration: const Duration(seconds: 2),
+                          transitionsBuilder: (_, a, __, c) =>
+                              FadeTransition(opacity: a, child: c),
+                        ),
+                      );
+                    },
                     leading: const Icon(
                       Icons.info,
                       color: kMainTextColor,
@@ -145,7 +159,17 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                   ListTile(
                     minTileHeight: 80,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const FeedbackPage(),
+                          transitionDuration: const Duration(seconds: 2),
+                          transitionsBuilder: (_, a, __, c) =>
+                              FadeTransition(opacity: a, child: c),
+                        ),
+                      );
+                    },
                     leading: const Icon(
                       Icons.feedback,
                       color: kMainTextColor,

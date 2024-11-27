@@ -1,10 +1,12 @@
-const url = 'http://172.21.18.116:7000/';
+const url = 'http://192.168.1.17:7000/';
 
 const signUpApi = '${url}registeration';
 
 const loginApi = '${url}login';
 
 const forgotApi = '${url}forgot';
+
+const updateUserData = '${url}updateuserdata';
 
 const getProductApi = '${url}getproduct';
 
@@ -25,3 +27,11 @@ const addFavouriteProduct = '${url}addfavouriteproduct';
 const getFavouriteProduct = '${url}getfavouriteproduct';
 
 const deleteFavouriteProduct = '${url}deletefavouriteproduct';
+
+const addAddressApi = '${url}addaddress';
+
+const getAddressApi = '${url}getaddress';
+
+const updateAddressApi = '${url}updateaddress';
+
+const deleteAddressApi = '${url}deleteaddress';

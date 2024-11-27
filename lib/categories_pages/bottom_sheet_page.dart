@@ -189,6 +189,7 @@ class _BottomSheetPageState extends State<BottomSheetPage> {
               margin: const EdgeInsets.all(10),
               child: Text(
                 widget.product_desc,
+                textAlign: TextAlign.justify,
                 style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,

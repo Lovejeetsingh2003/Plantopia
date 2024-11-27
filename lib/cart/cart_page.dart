@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:plantopia/cart/payment_page.dart';
 import 'package:plantopia/colors.dart';
 import 'package:plantopia/config.dart';
 import 'package:plantopia/main.dart';
@@ -137,19 +137,10 @@ class _CartPageState extends State<CartPage> {
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
 
-  void fetchData() async {
-    try {
-      List<CartObject> cart = await getCart();
-      // ignore: unused_local_variable
-      List<ProductObject> products = await getProduct(cart);
-
-      setState(() {});
-    } catch (e) {
-      print("Error fetching data: $e");
-    }
+    setState(() {
+      fetchData();
+    });
   }
 
   // Bill Section
@@ -175,16 +166,37 @@ class _CartPageState extends State<CartPage> {
     return subTotal + taxes + deliveryCharges - discount;
   }
 
-  void addItemToCartBill(String productId, int price, int quantity) {
-    cartItems.add({
-      'product_id': productId,
-      'price': price,
-      'quantity': quantity,
-    });
+  void fetchData() async {
+    try {
+      List<CartObject> cart = await getCart();
+      List<ProductObject> products = await getProduct(cart);
+
+      // Clear previous items to avoid duplicates
+      cartItems.clear();
+
+      // Add items to cart bill calculation
+      for (int i = 0; i < cart.length; i++) {
+        cartItems.add({
+          'product_id': products[i].id,
+          'price': products[i].productPrice,
+          'quantity': cart[i].quantity,
+        });
+      }
+
+      // Calculate totals
+      subTotal = calculateSubTotal(cartItems);
+      taxes = calculateTaxes(subTotal, taxRate);
+      deliveryCharges = calculateDeliveryCharges(subTotal);
+      total = calculateTotal(subTotal, taxes, deliveryCharges, discount);
+
+      setState(() {});
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
   }
 
-  double taxRate = 0.05; // Example 5% tax rate
-  double discount = 0.0; // Example discount
+  double taxRate = 0.05; //  5% tax rate
+  double discount = 0.0; //  discount
 
   @override
   Widget build(BuildContext context) {
@@ -259,13 +271,14 @@ class _CartPageState extends State<CartPage> {
                         var firstName = product.productFirstName;
                         var lastName = product.productLastName;
                         var price = product.productPrice;
-                        addItemToCartBill(
-                            product.id!, price!, cartData.quantity!);
-                        subTotal = calculateSubTotal(cartItems);
-                        taxes = calculateTaxes(subTotal, taxRate);
-                        deliveryCharges = calculateDeliveryCharges(subTotal);
-                        total = calculateTotal(
-                            subTotal, taxes, deliveryCharges, discount);
+
+                        // addItemToCartBill(
+                        //     product.id!, price!, cartData.quantity!);
+                        // subTotal = calculateSubTotal(cartItems);
+                        // taxes = calculateTaxes(subTotal, taxRate);
+                        // deliveryCharges = calculateDeliveryCharges(subTotal);
+                        // total = calculateTotal(
+                        //     subTotal, taxes, deliveryCharges, discount);
 
                         return Container(
                           margin: const EdgeInsets.only(top: 10),
@@ -416,9 +429,7 @@ class _CartPageState extends State<CartPage> {
 
               //apply coupon
               GestureDetector(
-                onTap: () {
-                  setState(() {});
-                },
+                onTap: () {},
                 child: Container(
                   margin: const EdgeInsets.only(top: 20),
                   alignment: Alignment.center,
@@ -475,109 +486,117 @@ class _CartPageState extends State<CartPage> {
                     Radius.circular(20),
                   ),
                 ),
-                child: GestureDetector(
-                  child: Column(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Sub Total",
+                          style: kLightAppThemeData.textTheme.bodyMedium,
+                        ),
+                        Text(
+                          "${subTotal.toString()}  Rs.",
+                          style: kLightAppThemeData.textTheme.bodyMedium,
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Discount",
+                          style: kLightAppThemeData.textTheme.bodyMedium,
+                        ),
+                        Text(
+                          "${discount.toString()}  Rs.",
+                          style: kLightAppThemeData.textTheme.bodyMedium,
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Dilivery charges",
+                          style: kLightAppThemeData.textTheme.bodyMedium,
+                        ),
+                        Text(
+                          "${deliveryCharges.toString()}  Rs.",
+                          style: kLightAppThemeData.textTheme.bodyMedium,
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Taxes",
+                          style: kLightAppThemeData.textTheme.bodyMedium,
+                        ),
+                        Text(
+                          "${taxes.ceilToDouble().toString()}  Rs.",
+                          style: kLightAppThemeData.textTheme.bodyMedium,
+                        )
+                      ],
+                    ),
+                    const Divider(
+                      height: 1,
+                      color: kMainTextColor,
+                      indent: 20,
+                      endIndent: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Total",
+                          style: kLightAppThemeData.textTheme.bodyMedium,
+                        ),
+                        Text(
+                          "${total.ceilToDouble().toString()}  Rs.",
+                          style: kLightAppThemeData.textTheme.bodyMedium,
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              //place order
+
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => const PaymentPage(),
+                      transitionDuration: const Duration(seconds: 2),
+                      transitionsBuilder: (_, a, __, c) =>
+                          FadeTransition(opacity: a, child: c),
+                    ),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 30),
+                  alignment: Alignment.center,
+                  height: 60,
+                  decoration: const BoxDecoration(
+                    color: kPrimaryColor,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Sub Total",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            "${subTotal.toString()}  Rs.",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Discount",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            "${discount.toString()}  Rs.",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Dilivery charges",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            "${deliveryCharges.toString()}  Rs.",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Taxes",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            "${taxes.ceilToDouble().toString()}  Rs.",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          )
-                        ],
-                      ),
-                      const Divider(
-                        height: 1,
-                        color: kMainTextColor,
-                        indent: 20,
-                        endIndent: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Total",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            "${total.ceilToDouble().toString()}  Rs.",
-                            style: kLightAppThemeData.textTheme.bodyMedium,
-                          )
-                        ],
+                      Text(
+                        "Place Order",
+                        style: kLightAppThemeData.textTheme.titleSmall,
                       ),
                     ],
                   ),
-                ),
-              ),
-              // order confirm
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 30),
-                alignment: Alignment.center,
-                height: 60,
-                decoration: const BoxDecoration(
-                  color: kPrimaryColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      "Confirm Order",
-                      style: kLightAppThemeData.textTheme.titleSmall,
-                    ),
-                    const Icon(
-                      Icons.local_shipping,
-                      size: 50,
-                      color: kMainTextColor,
-                    )
-                  ],
                 ),
               ),
             ],
