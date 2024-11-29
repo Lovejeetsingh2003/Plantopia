@@ -32,6 +32,8 @@ const addAddressApi = '${url}addaddress';
 
 const getAddressApi = '${url}getaddress';
 
+const getAddressByIdApi = '${url}getaddressbyid';
+
 const updateAddressApi = '${url}updateaddress';
 
 const deleteAddressApi = '${url}deleteaddress';

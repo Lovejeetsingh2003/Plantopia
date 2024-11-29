@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:plantopia/cart/add_address_page.dart';
+import 'package:plantopia/cart/payment_page.dart';
 import 'package:plantopia/config.dart';
 import 'package:plantopia/objects/address_object.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +18,8 @@ class SelectAddressPage extends StatefulWidget {
 
 class _SelectAddressPageState extends State<SelectAddressPage> {
   var list_length;
+  var selectedAddressIndex = -1;
+  var name, selectedAddress, mobileNo;
   static Future<List<AddressObject>> getAddress() async {
     List<AddressObject> address = [];
     try {
@@ -56,6 +60,27 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
     } catch (e) {
       print("error : $e");
       return [];
+    }
+  }
+
+  void deleteAddress(id) async {
+    var body = {
+      "_id": id,
+    };
+    try {
+      var res = await http.post(
+        Uri.parse(deleteAddressApi),
+        body: jsonEncode(body),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+      );
+
+      if (res.statusCode == 200) {
+        Fluttertoast.showToast(msg: "The Address successfully deleted");
+      } else {
+        Fluttertoast.showToast(msg: "Some error occur while deleting Address.");
+      }
+    } catch (e) {
+      print("error : $e");
     }
   }
 
@@ -195,15 +220,39 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
                         ),
                         child: Row(
                           children: [
-                            const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.check_box_outline_blank,
-                                  size: 30,
-                                  color: kPrimaryColor,
-                                )
-                              ],
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (selectedAddressIndex == index) {
+                                    selectedAddressIndex = -1;
+                                  } else {
+                                    selectedAddressIndex = index;
+                                    name = username.toString();
+                                    mobileNo = phoneNo.toString();
+                                    selectedAddress =
+                                        "${houseNo.toString()}-${area.toString()},${landmark.toString()},${city.toString()},\n${state.toString()} - ${pincode.toString()}";
+                                    print(name);
+                                    print(mobileNo);
+                                    print(selectedAddress);
+                                  }
+                                });
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  selectedAddressIndex == index
+                                      ? const Icon(
+                                          Icons.check_box,
+                                          size: 30,
+                                          color: kPrimaryColor,
+                                        )
+                                      : const Icon(
+                                          Icons.check_box_outline_blank,
+                                          size: 30,
+                                          color: kPrimaryColor,
+                                        ),
+                                ],
+                              ),
                             ),
                             Container(
                               margin: const EdgeInsets.only(left: 20),
@@ -240,7 +289,7 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
                                   Container(
                                     margin: const EdgeInsets.only(top: 20),
                                     width:
-                                        MediaQuery.of(context).size.width / 1.4,
+                                        MediaQuery.of(context).size.width / 1.5,
                                     child: Text(
                                       "${houseNo.toString()}-${area.toString()},${landmark.toString()},${city.toString()},\n${state.toString()} - ${pincode.toString()}",
                                       style: kLightAppThemeData
@@ -257,31 +306,99 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
                                           .textTheme.bodySmall,
                                     ),
                                   ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: const EdgeInsets.only(top: 15),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 5, horizontal: 10),
-                                      alignment: Alignment.center,
-                                      decoration: const BoxDecoration(
-                                        color: kPrimaryColor,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(20),
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            PageRouteBuilder(
+                                              pageBuilder: (_, __, ___) =>
+                                                  AddAddressPage(
+                                                username: address.username,
+                                                id: address.id,
+                                                phoneNo: address.phoneNo,
+                                                alternatePhoneNo:
+                                                    address.alternatePhoneNo,
+                                                pincode: address.pincode,
+                                                state: address.state,
+                                                city: address.city,
+                                                houseNo: address.houseNo,
+                                                area: address.area,
+                                                nearbyLandmark:
+                                                    address.nearbyLandmark,
+                                                addressType:
+                                                    address.addressType,
+                                              ),
+                                              transitionDuration:
+                                                  const Duration(seconds: 2),
+                                              transitionsBuilder:
+                                                  (_, a, __, c) =>
+                                                      FadeTransition(
+                                                          opacity: a, child: c),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(top: 15),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 10),
+                                          alignment: Alignment.center,
+                                          decoration: const BoxDecoration(
+                                            color: kPrimaryColor,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(20),
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Text(
+                                                "Edit Details",
+                                                style: kLightAppThemeData
+                                                    .textTheme.bodyMedium,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Text(
-                                            "Edit Details",
-                                            style: kLightAppThemeData
-                                                .textTheme.bodyMedium,
+                                      GestureDetector(
+                                        onTap: () {
+                                          print("ID is : ${address.id}");
+                                          setState(() {
+                                            deleteAddress(
+                                              address.id,
+                                            );
+                                          });
+                                        },
+                                        child: Container(
+                                          margin: const EdgeInsets.only(
+                                              top: 15, left: 20),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 10),
+                                          alignment: Alignment.center,
+                                          decoration: const BoxDecoration(
+                                            color: kPrimaryColor,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(20),
+                                            ),
                                           ),
-                                        ],
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Text(
+                                                "Delete",
+                                                style: kLightAppThemeData
+                                                    .textTheme.bodyMedium,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -296,6 +413,29 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
             },
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: kPrimaryColor,
+        child: const Icon(
+          Icons.check,
+          size: 30,
+          color: kMainTextColor,
+        ),
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (_, __, ___) => PaymentPage(
+                username: name,
+                phoneNo: mobileNo,
+                address: selectedAddress,
+              ),
+              transitionDuration: const Duration(seconds: 2),
+              transitionsBuilder: (_, a, __, c) =>
+                  FadeTransition(opacity: a, child: c),
+            ),
+          );
+        },
       ),
     );
   }

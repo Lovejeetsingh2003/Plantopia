@@ -7,7 +7,30 @@ import '../colors.dart';
 import '../main.dart';
 
 class AddAddressPage extends StatefulWidget {
-  const AddAddressPage({super.key});
+  final username,
+      id,
+      phoneNo,
+      alternatePhoneNo,
+      pincode,
+      state,
+      city,
+      houseNo,
+      area,
+      nearbyLandmark,
+      addressType;
+  const AddAddressPage(
+      {this.id,
+      this.username,
+      this.phoneNo,
+      this.alternatePhoneNo,
+      this.pincode,
+      this.state,
+      this.city,
+      this.houseNo,
+      this.area,
+      this.nearbyLandmark,
+      this.addressType,
+      super.key});
 
   @override
   State<AddAddressPage> createState() => _AddAddressPageState();
@@ -16,6 +39,7 @@ class AddAddressPage extends StatefulWidget {
 class _AddAddressPageState extends State<AddAddressPage> {
   TextEditingController userName = TextEditingController();
   TextEditingController phoneNo = TextEditingController();
+  TextEditingController alternatePhoneNo = TextEditingController();
   TextEditingController pinCode = TextEditingController();
   TextEditingController state = TextEditingController();
   TextEditingController city = TextEditingController();
@@ -27,7 +51,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
   var type = 0;
   var addresstype = "";
 
-  void addProduct() async {
+  void addAddress() async {
     if (userName.text.isNotEmpty &&
         phoneNo.text.isNotEmpty &&
         pinCode.text.isNotEmpty &&
@@ -39,11 +63,13 @@ class _AddAddressPageState extends State<AddAddressPage> {
       var addressBody = {
         "username": userName.text,
         "phone_no": phoneNo.text,
+        "alternate_phone_no": alternatePhoneNo.text,
         "pincode": pinCode.text,
         "state": state.text,
         "city": city.text,
         "house_no": houseNo.text,
         "area": area.text,
+        "nearby_landmark": nearbyLandmark.text,
         "address_type": addresstype,
       };
 
@@ -58,6 +84,97 @@ class _AddAddressPageState extends State<AddAddressPage> {
           var message = jsonDecode(response.body);
           print("Message: $message");
           Fluttertoast.showToast(msg: "Address Added Successful");
+          Navigator.pop(context);
+        } else {
+          print("Error : ${response.body}");
+        }
+      } catch (e) {
+        print("error: $e");
+      }
+    } else {
+      Fluttertoast.showToast(msg: "some error occured or select all fields.");
+    }
+  }
+
+  void checkData() {
+    if (widget.id == null &&
+        widget.username == null &&
+        widget.phoneNo == null &&
+        widget.pincode == null &&
+        widget.state == null &&
+        widget.city == null &&
+        widget.houseNo == null &&
+        widget.area == null &&
+        widget.addressType == null) {
+      userName.text = "";
+      phoneNo.text = "";
+      pinCode.text = "";
+      state.text = "";
+      alternatePhoneNo.text = "";
+      area.text = "";
+      houseNo.text = "";
+      city.text = "";
+      nearbyLandmark.text = "";
+      type = 0;
+    } else {
+      userName.text = widget.username ?? "Unknown";
+      phoneNo.text = widget.phoneNo ?? "Unknown";
+      alternatePhoneNo.text = widget.alternatePhoneNo ?? "Unknown";
+      pinCode.text = widget.pincode ?? "Unknown";
+      state.text = widget.state ?? "Unknown";
+      city.text = widget.city ?? "Unknown";
+      houseNo.text = widget.houseNo ?? "Unknown";
+      area.text = widget.area ?? "Unknown";
+      nearbyLandmark.text = widget.nearbyLandmark ?? "Unknown";
+      if (widget.addressType == "Home") {
+        type = 1;
+      } else {
+        type = 2;
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkData();
+  }
+
+  void updateAddress() async {
+    if (userName.text.isNotEmpty &&
+        phoneNo.text.isNotEmpty &&
+        pinCode.text.isNotEmpty &&
+        state.text.isNotEmpty &&
+        city.text.isNotEmpty &&
+        houseNo.text.isNotEmpty &&
+        area.text.isNotEmpty &&
+        addresstype.isNotEmpty) {
+      var addressBody = {
+        "id": widget.id,
+        "username": userName.text,
+        "phone_no": phoneNo.text,
+        "alternate_phone_no": alternatePhoneNo.text,
+        "pincode": pinCode.text,
+        "state": state.text,
+        "city": city.text,
+        "house_no": houseNo.text,
+        "area": area.text,
+        "nearby_landmark": nearbyLandmark.text,
+        "address_type": addresstype,
+      };
+
+      try {
+        var response = await http.post(
+          Uri.parse(updateAddressApi),
+          body: jsonEncode(addressBody),
+          headers: {"Content-Type": "application/json; charset=UTF-8"},
+        );
+
+        if (response.statusCode == 200) {
+          var message = jsonDecode(response.body);
+          print("Message: $message");
+          Fluttertoast.showToast(msg: "Address Updated Successful");
           Navigator.pop(context);
         } else {
           print("Error : ${response.body}");
@@ -180,7 +297,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   ? Container(
                       margin: const EdgeInsets.only(top: 10),
                       child: TextField(
-                        controller: phoneNo,
+                        controller: alternatePhoneNo,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -574,16 +691,6 @@ class _AddAddressPageState extends State<AddAddressPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  // if (widget.id != null &&
-                  //     widget.desc != null &&
-                  //     widget.firstName != null &&
-                  //     widget.lastName != null &&
-                  //     widget.pic != null &&
-                  //     widget.price != null &&
-                  //     widget.type != null) {
-                  //   updateProduct();
-                  // } else {
-
                   if (type == 1) {
                     addresstype = "Home";
                   } else if (type == 2) {
@@ -591,8 +698,26 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   } else {
                     addresstype = "Unknown";
                   }
-                  addProduct();
-                  // }
+                  if (widget.id != null &&
+                      widget.username != null &&
+                      widget.phoneNo != null &&
+                      widget.pincode != null &&
+                      widget.state != null &&
+                      widget.city != null &&
+                      widget.houseNo != null &&
+                      widget.area != null &&
+                      widget.addressType != null) {
+                    updateAddress();
+                  } else {
+                    if (type == 1) {
+                      addresstype = "Home";
+                    } else if (type == 2) {
+                      addresstype = "Work";
+                    } else {
+                      addresstype = "Unknown";
+                    }
+                    addAddress();
+                  }
                 },
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 30),

@@ -4,7 +4,10 @@ import '../colors.dart';
 import '../main.dart';
 
 class PaymentPage extends StatefulWidget {
-  const PaymentPage({super.key});
+  final username;
+  final address;
+  final phoneNo;
+  const PaymentPage({this.username, this.address, this.phoneNo, super.key});
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -12,8 +15,28 @@ class PaymentPage extends StatefulWidget {
 
 class _PaymentPageState extends State<PaymentPage> {
   var isAddressPresent = false;
+
+  void checkAdress() {
+    if (widget.username == null &&
+        widget.address == null &&
+        widget.phoneNo == null) {
+      isAddressPresent = false;
+    } else {
+      isAddressPresent = true;
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkAdress();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(widget.username);
+    print(widget.phoneNo);
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
@@ -98,9 +121,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               ),
                             ),
                             child: Text(
-                              isAddressPresent == false
-                                  ? "Add Address"
-                                  : "Change",
+                              "Select Address",
                               style: kLightAppThemeData.textTheme.bodyMedium,
                             ),
                           ),
@@ -108,36 +129,36 @@ class _PaymentPageState extends State<PaymentPage> {
                       ],
                     ),
                   ),
-                  isAddressPresent == true
+                  isAddressPresent == false
                       ? Expanded(
                           child: Container(
                             alignment: Alignment.center,
                             child: Text(
-                              "No Address Present !",
+                              "Select Address",
                               style: kLightAppThemeData.textTheme.titleSmall,
                             ),
                           ),
                         )
                       : Container(
+                          width: MediaQuery.of(context).size.width / 1.5,
                           margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
+                            horizontal: 10,
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "User Name",
-                                textAlign: TextAlign.left,
+                                widget.username.toString(),
                                 style: kLightAppThemeData.textTheme.bodySmall,
                               ),
                               Text(
-                                "Address",
+                                widget.address.toString(),
                                 textAlign: TextAlign.justify,
                                 style: kLightAppThemeData.textTheme.bodyMedium,
                               ),
                               Text(
-                                "Phone No.",
-                                textAlign: TextAlign.justify,
+                                widget.phoneNo.toString(),
                                 style: kLightAppThemeData.textTheme.bodyMedium,
                               ),
                             ],
