@@ -5,7 +5,6 @@ import 'package:plantopia/side_menu/about_page.dart';
 import 'package:plantopia/side_menu/acc_details_page.dart';
 import 'package:plantopia/side_menu/feedback_page.dart';
 import 'package:plantopia/side_menu/order_history_page.dart';
-import 'package:plantopia/side_menu/setting_page.dart';
 import '../main_pages/info_card.dart';
 
 class SideMenu extends StatefulWidget {
@@ -87,36 +86,6 @@ class _SideMenuState extends State<SideMenu> {
                     ),
                     title: Text(
                       "Order History",
-                      style: kLightAppThemeData.textTheme.bodyMedium,
-                    ),
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    indent: 30,
-                    endIndent: 30,
-                    color: kMainTextColor,
-                  ),
-                  ListTile(
-                    minTileHeight: 80,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => const SettingPage(),
-                          transitionDuration: const Duration(seconds: 2),
-                          transitionsBuilder: (_, a, __, c) =>
-                              FadeTransition(opacity: a, child: c),
-                        ),
-                      );
-                    },
-                    leading: const Icon(
-                      Icons.settings,
-                      color: kMainTextColor,
-                      size: 30,
-                    ),
-                    title: Text(
-                      "Setting",
                       style: kLightAppThemeData.textTheme.bodyMedium,
                     ),
                   ),
