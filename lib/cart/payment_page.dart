@@ -1,13 +1,26 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:plantopia/cart/cart_page.dart';
 import 'package:plantopia/cart/select_address_page.dart';
+import 'package:plantopia/config.dart';
+import 'package:plantopia/main_pages/home_page.dart';
 import '../colors.dart';
 import '../main.dart';
+import 'package:http/http.dart' as http;
 
 class PaymentPage extends StatefulWidget {
   final username;
   final address;
   final phoneNo;
-  const PaymentPage({this.username, this.address, this.phoneNo, super.key});
+  final cartProductId;
+  const PaymentPage(
+      {this.cartProductId,
+      this.username,
+      this.address,
+      this.phoneNo,
+      super.key});
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -31,6 +44,28 @@ class _PaymentPageState extends State<PaymentPage> {
     // TODO: implement initState
     super.initState();
     checkAdress();
+  }
+
+  void deleteCartProducts(id) async {
+    var body = {
+      "_id": id,
+    };
+    try {
+      var res = await http.post(
+        Uri.parse(deleteCartProduct),
+        body: jsonEncode(body),
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+      );
+
+      if (res.statusCode == 200) {
+        Fluttertoast.showToast(msg: "The Product successfully deleted");
+        setState(() {});
+      } else {
+        Fluttertoast.showToast(msg: "Some error occur while deleting Product.");
+      }
+    } catch (e) {
+      print("error : $e");
+    }
   }
 
   @override
@@ -165,6 +200,63 @@ class _PaymentPageState extends State<PaymentPage> {
                           ),
                         ),
                 ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                color: kInvisibleGreenContainerColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    "At This Time We only Provide, Cash On Delivery.",
+                    textAlign: TextAlign.justify,
+                    style: kLightAppThemeData.textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                if (isAddressPresent == false) {
+                  Fluttertoast.showToast(msg: "Please Select Address First.");
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Your Order Successfully Placed.");
+
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      (route) {
+                    return route.settings.name == const CartPage();
+                  });
+                }
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 30),
+                alignment: Alignment.center,
+                height: 60,
+                width: MediaQuery.of(context).size.width / 2,
+                decoration: const BoxDecoration(
+                  color: kPrimaryColor,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "Order Now",
+                      style: kLightAppThemeData.textTheme.titleSmall,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

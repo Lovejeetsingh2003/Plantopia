@@ -23,6 +23,7 @@ class _CartPageState extends State<CartPage> {
   late double taxes = 5.0;
   late double deliveryCharges = 40.0;
   late double total = 0.0;
+  var cartProductId = [];
 
   static getCart() async {
     List<CartObject> cart_object = [];
@@ -272,14 +273,8 @@ class _CartPageState extends State<CartPage> {
                         var lastName = product.productLastName;
                         var price = product.productPrice;
 
-                        // addItemToCartBill(
-                        //     product.id!, price!, cartData.quantity!);
-                        // subTotal = calculateSubTotal(cartItems);
-                        // taxes = calculateTaxes(subTotal, taxRate);
-                        // deliveryCharges = calculateDeliveryCharges(subTotal);
-                        // total = calculateTotal(
-                        //     subTotal, taxes, deliveryCharges, discount);
-
+                        cartProductId.add(cartData.id);
+                        print("CartId's : ${cartProductId}");
                         return Container(
                           margin: const EdgeInsets.only(top: 10),
                           height: 200,
@@ -571,7 +566,9 @@ class _CartPageState extends State<CartPage> {
                   Navigator.push(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => const PaymentPage(),
+                      pageBuilder: (_, __, ___) => PaymentPage(
+                        cartProductId: cartProductId,
+                      ),
                       transitionDuration: const Duration(seconds: 2),
                       transitionsBuilder: (_, a, __, c) =>
                           FadeTransition(opacity: a, child: c),

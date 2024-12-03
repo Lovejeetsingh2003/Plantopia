@@ -37,3 +37,7 @@ const getAddressByIdApi = '${url}getaddressbyid';
 const updateAddressApi = '${url}updateaddress';
 
 const deleteAddressApi = '${url}deleteaddress';
+
+const addOrderHistory = '${url}addorderhistory';
+
+const getOrderHistory = '${url}getorderhistory';
