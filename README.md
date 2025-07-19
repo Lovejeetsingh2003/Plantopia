@@ -8,8 +8,6 @@
 
 A full-featured, cross-platform mobile application for plant shopping, built with Flutter and powered by Node.js and MongoDB.
 
-![Plantopia App Banner]([https://via.placeholder.com/1200x300?text=Plantopia+App+Banner](https://drive.google.com/file/d/19ZiK9er2RlNRVBbXNE9N7jvtwAFinDWq/view?usp=drive_link))
-
 ## 📋 Table of Contents
 - [Overview](#overview)
 - [Features](#features)
@@ -64,10 +62,20 @@ The backend is built as a RESTful API using Node.js and MongoDB, ensuring secure
 ## App Screenshots
 
 ### User App
-![User App Screenshots](https://via.placeholder.com/800x400?text=User+App+Screenshots)
+<p align="center">
+  <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_1.jpg" width="180" height="400" />
+  <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_2.jpg" width="180" height="400" />
+  <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_3.jpg" width="180"  height="400"/>
+  <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_4.jpg" width="180"  height="400"/>
+  <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_5.jpg" width="180"  height="400"/>
+  <br/>
+  <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_6.jpg" width="180"  height="400"/>
+  <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_7.jpg" width="180"  height="400"/>
+  <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_8.jpg" width="180"  height="400"/>
+  <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_9.jpg" width="180"  height="400"/>
+  <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_10.jpg" width="180"  height="400"/>
+</p>
 
-### Admin App
-![Admin App Screenshots](https://via.placeholder.com/800x400?text=Admin+App+Screenshots)
 
 ## Tech Stack
 
