@@ -8,6 +8,8 @@
 
 A full-featured, cross-platform mobile application for plant shopping, built with Flutter and powered by Node.js and MongoDB.
 
+ <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_banner_1.jpg"/>
+
 ## 📋 Table of Contents
 - [Overview](#overview)
 - [Features](#features)
