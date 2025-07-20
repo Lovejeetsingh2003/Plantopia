@@ -63,7 +63,7 @@ The backend is built as a RESTful API using Node.js and MongoDB, ensuring secure
 
 ### User App
 <p align="center">
-  <a href="https://youtu.be/jIQ0Dx-4peE?si=C2k1tfuwqRKa-DL0" target="_blank">
+  <a href="[https://youtu.be/jIQ0Dx-4peE?si=C2k1tfuwqRKa-DL0](https://www.linkedin.com/posts/lovejeet-singh-3ba160279_plantopia-flutter-nodejs-activity-7263940422803103744-vqlE?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEPVBD4BeyH-Wqxe3CigAaWgXxUuNj-oSOM)" target="_blank">
     <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_banner.jpg" width="500" />
   </a>
 </p>
