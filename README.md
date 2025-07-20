@@ -63,12 +63,20 @@ The backend is built as a RESTful API using Node.js and MongoDB, ensuring secure
 
 ### User App
 <p align="center">
+  <a href="https://youtu.be/jIQ0Dx-4peE?si=C2k1tfuwqRKa-DL0" target="_blank">
+    <img src="https://img.youtube.com/vi/jIQ0Dx-4peE/hqdefault.jpg" width="320" />
+  </a>
+</p>
+
+
+<p align="center">
+<br>
   <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_1.jpg" width="180" height="400" />
   <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_2.jpg" width="180" height="400" />
   <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_3.jpg" width="180"  height="400"/>
   <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_4.jpg" width="180"  height="400"/>
   <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_5.jpg" width="180"  height="400"/>
-  <br/>
+<br>
   <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_6.jpg" width="180"  height="400"/>
   <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_7.jpg" width="180"  height="400"/>
   <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_8.jpg" width="180"  height="400"/>
