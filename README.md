@@ -64,7 +64,7 @@ The backend is built as a RESTful API using Node.js and MongoDB, ensuring secure
 ### User App
 <p align="center">
   <a href="https://youtu.be/jIQ0Dx-4peE?si=C2k1tfuwqRKa-DL0" target="_blank">
-    <img src="https://img.youtube.com/vi/jIQ0Dx-4peE/hqdefault.jpg" width="320" />
+    <img src="https://github.com/Lovejeetsingh2003/Plantopia/blob/main/plantopia_banner.jpg" width="500" />
   </a>
 </p>
 
